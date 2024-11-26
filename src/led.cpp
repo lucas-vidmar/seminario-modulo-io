@@ -18,3 +18,7 @@ void BuiltInLed::blink(int interval) {
 void BuiltInLed::onTimer() {
     digitalWrite(BUILT_IN_LED_PIN, !digitalRead(BUILT_IN_LED_PIN));
 }
+
+void BuiltInLed::toggle() {
+    digitalWrite(BUILT_IN_LED_PIN, !digitalRead(BUILT_IN_LED_PIN));
+}

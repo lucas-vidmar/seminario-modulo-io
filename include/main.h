@@ -7,3 +7,5 @@
 #include "i2c.h"
 #include "dac.h"
 #include "adc.h"
+#include "gpio.h"
+#include "webserver.h"

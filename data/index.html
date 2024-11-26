@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Control de ESP32</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; }
+    h1 { color: #333; }
+    .button { padding: 15px 30px; font-size: 18px; margin: 20px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1>Control de ESP32</h1>
+  <button class="button" onclick="toggleLED()">Toggle LED</button>
+  <p id="status">Estado del LED: ---</p>
+
+  <script>
+    function toggleLED() {
+      fetch('/toggleLED')
+        .then(response => response.text())
+        .then(data => {
+          document.getElementById('status').innerText = 'Estado del LED: ' + data;
+        });
+    }
+  </script>
+</body>
+</html>
