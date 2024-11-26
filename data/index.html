@@ -2,27 +2,332 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Control de ESP32</title>
+  <title>Modulo IO</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    body { font-family: Arial, sans-serif; text-align: center; }
-    h1 { color: #333; }
+    body {
+      font-family: Arial, Helvetica;
+      text-align: center;
+    }
+    h1 {
+      color: #333;
+      font-weight: bolder;
+      background-color: antiquewhite;
+      padding: 10px;
+    }
     .button { padding: 15px 30px; font-size: 18px; margin: 20px; cursor: pointer; }
+    h2 {
+      font-size: large;
+    }
+    h3 {
+      text-align: left;
+      margin: 10px;
+    }
+    .flex-child{
+      margin: 10px;
+      margin-top: 20px;
+    }
+    .border{
+      border: 2px solid antiquewhite;
+      border-radius: 10px;
+    }
+    table {
+      margin: auto;
+      border: 1px solid #333;
+      border-radius: 10px;
+      border-spacing: 0px;
+      overflow: hidden;
+    }
+    td, th {
+      border-left:solid #333 1px;
+      border-top:solid #333 1px;
+      padding: 5px;
+    }
+
+    th {
+      background-color: lightgray;
+      border-top: none;
+    }
+    td:first-child, th:first-child {
+     border-left: none;
+    }
+
+    .slidecontainer {
+      width: 100%; /* Width of the outside container */
+      display: flex;
+      flex-flow: row;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .slidecontainer div{
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+
+    /* The slider itself */
+    .slider {
+      -webkit-appearance: none;  /* Override default CSS styles */
+      appearance: none;
+      width: 100%; /* Full-width */
+      height: 10px; /* Specified height */
+      background: #d3d3d3; /* Grey background */
+      outline: none; /* Remove outline */
+      opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+      -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+      transition: opacity .2s;
+    }
+
+    /* Mouse-over effects */
+    .slider:hover {
+      opacity: 1; /* Fully shown on mouse-over */
+    }
+
+    /* The switch - the box around the slidero */
+    .switch {
+      position: relative;
+      display: block;
+      margin-left: 10px;
+      width: 60px;
+      height: 34px;
+    }
+
+    /* Hide default HTML checkbox */
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    /* The slidero */
+    .slidero {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      -webkit-transition: .4s;
+      transition: .4s;
+    }
+
+    .slidero:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      -webkit-transition: .4s;
+      transition: .4s;
+    }
+
+    input:checked + .slidero {
+      background-color: #333;
+    }
+
+    input:focus + .slidero {
+      box-shadow: 0 0 1px #333;
+    }
+
+    input:checked + .slidero:before {
+      -webkit-transform: translateX(26px);
+      -ms-transform: translateX(26px);
+      transform: translateX(26px);
+    }
+
+    /* Rounded slideros */
+    .slidero.round {
+      border-radius: 34px;
+    }
+
+    .slidero.round:before {
+      border-radius: 50%;
+    } 
+
   </style>
 </head>
 <body>
-  <h1>Control de ESP32</h1>
-  <button class="button" onclick="toggleLED()">Toggle LED</button>
-  <p id="status">Estado del LED: ---</p>
+  <h1>Modulo IO</h1>
+  <h2>Seminario | Bergmann - Boiero - Vidmar</h2>
+  <div style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center;">
+    
+    <!-- Inputs -->
+    <div class="flex-child">
+      <h3>Entradas</h3>
+      <div style="padding: 10px;">
+      
+        <table>
+          <tr>
+            <th>Entrada</th>
+            <th>Valor</th>
+          </tr>
+          <tr>
+            <td>DI1</td>
+            <td id="DI1">--</td>
+          </tr>
+          <tr>
+            <td>DI2</td>
+            <td id="DI2">--</td>
+          </tr>
+          <tr>
+            <td>DI3</td>
+            <td id="DI3">--</td>
+          </tr>
+          <tr>
+            <td>AI1</td>
+            <td id="AI1">--</td>
+          </tr>
+          <tr>
+            <td>AI2</td>
+            <td id="AI2">--</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    
+    <!-- Outputs -->
+    <div class="flex-child">
+      <h3>Salidas</h3>
+      
+      <div style="background-color: antiquewhite; padding: 10px;" class="border">
+        <!-- AO1 -->
+        <div style="text-align: left; margin: 10px; font-weight: bold;">AO1</div>
+        <div class="slidecontainer">
+          <div style="padding-left: 10px; padding-right: 10px;">V1</div>
+          <input type="range" min="1" max="100" value="1" class="slider" id="AO1">
+          <div style="padding-left: 10px; padding-right: 10px;">V2</div>
+        </div>
+        <span id="AO1Value">0</span>
 
+        <!-- DO1 -->
+        <br>
+        <div style="text-align: left; margin: 10px; font-weight: bold;">DO1</div>
+        <label class="switch">
+          <input type="checkbox" id="DO1">
+          <span class="slidero round"></span>
+        </label>
+
+        <!-- DO2 -->
+        <br>
+        <div style="text-align: left; margin: 10px; font-weight: bold;">DO2</div>
+        <label class="switch" id="DO2">
+          <input type="checkbox">
+          <span class="slidero round"></span>
+        </label>
+
+        <!-- DO3 -->
+        <br>
+        <div style="text-align: left; margin: 10px; font-weight: bold;">DO3</div>
+        <label class="switch">
+          <input type="checkbox" id="DO3">
+          <span class="slidero round"></span>
+        </label>
+
+        </div>
+    </div>
+  </div>
+
+  <!-- Functions -->
   <script>
-    function toggleLED() {
-      fetch('/toggleLED')
+    // Función para actualizar las entradas digitales
+    function updateDigitalInputs() {
+      fetch('/readDI1')
+        .then(response => response.text())
+        .then(state => {
+          document.getElementById('DI1').innerText = state === '1' ? 'ON' : 'OFF';
+        })
+        .catch(error => console.error('Error al leer DI1:', error));
+  
+      fetch('/readDI2')
+        .then(response => response.text())
+        .then(state => {
+          document.getElementById('DI2').innerText = state === '1' ? 'ON' : 'OFF';
+        })
+        .catch(error => console.error('Error al leer DI2:', error));
+  
+      fetch('/readDI3')
+        .then(response => response.text())
+        .then(state => {
+          document.getElementById('DI3').innerText = state === '1' ? 'ON' : 'OFF';
+        })
+        .catch(error => console.error('Error al leer DI3:', error));
+    }
+  
+    // Función para actualizar las entradas analógicas
+    function updateAnalogInputs() {
+      fetch('/readAI1')
+        .then(response => response.text())
+        .then(value => {
+          document.getElementById('AI1').innerText = value;
+        })
+        .catch(error => console.error('Error al leer AI1:', error));
+  
+      fetch('/readAI2')
+        .then(response => response.text())
+        .then(value => {
+          document.getElementById('AI2').innerText = value;
+        })
+        .catch(error => console.error('Error al leer AI2:', error));
+    }
+  
+    // Event listener para el slider de salida analógica
+    document.getElementById('AO1').addEventListener('input', function() {
+      var value = this.value;
+      document.getElementById('AO1Value').innerText = value;
+      fetch('/setAO1?value=' + value)
         .then(response => response.text())
         .then(data => {
-          document.getElementById('status').innerText = 'Estado del LED: ' + data;
-        });
+          console.log('AO1 ajustado a:', value);
+        })
+        .catch(error => console.error('Error al ajustar AO1:', error));
+    });
+  
+    // Event listeners para las salidas digitales
+    document.getElementById('DO1').addEventListener('change', function() {
+      var state = this.checked ? 1 : 0;
+      fetch('/setDO1?state=' + state)
+        .then(response => response.text())
+        .then(data => {
+          console.log('DO1 ajustado a:', state);
+        })
+        .catch(error => console.error('Error al ajustar DO1:', error));
+    });
+  
+    document.getElementById('DO2').addEventListener('change', function() {
+      var state = this.checked ? 1 : 0;
+      fetch('/setDO2?state=' + state)
+        .then(response => response.text())
+        .then(data => {
+          console.log('DO2 ajustado a:', state);
+        })
+        .catch(error => console.error('Error al ajustar DO2:', error));
+    });
+  
+    document.getElementById('DO3').addEventListener('change', function() {
+      var state = this.checked ? 1 : 0;
+      fetch('/setDO3?state=' + state)
+        .then(response => response.text())
+        .then(data => {
+          console.log('DO3 ajustado a:', state);
+        })
+        .catch(error => console.error('Error al ajustar DO3:', error));
+    });
+  
+    // Función para actualizar periódicamente las entradas
+    function updateInputs() {
+      updateDigitalInputs();
+      updateAnalogInputs();
     }
+  
+    // Iniciar la actualización periódica cada segundo
+    setInterval(updateInputs, 1000);
+  
+    // Llamar a la función de actualización al cargar la página
+    window.addEventListener('load', updateInputs);
   </script>
+  
 </body>
 </html>

@@ -9,3 +9,5 @@
 #include "adc.h"
 #include "gpio.h"
 #include "webserver.h"
+
+void HTMLHandlers();
