@@ -72,8 +72,10 @@ void Encoder::setPosition(int pos) {
 
 void Encoder::setMaxPosition(int maxPos) {
     encoderMaxPosition = maxPos;
+    if (position > encoderMaxPosition) setPosition(encoderMaxPosition);
 }
 
 void Encoder::setMinPosition(int minPos) {
     encoderMinPosition = minPos;
+    if (position < encoderMinPosition) setPosition(encoderMinPosition);
 }
