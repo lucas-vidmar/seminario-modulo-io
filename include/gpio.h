@@ -20,6 +20,7 @@ public:
     void setup() override;
     int read() override;
     void write(int value) override;
+    void toggle();
 };
 
 class AnalogGPIO : public GPIO {

@@ -40,9 +40,8 @@ AnalogGPIO ao1 = AnalogGPIO(AO1);
 enum MenuState {
   MAIN_MENU,
   MEASUREMENTS,
+  CONTROL_MENU,
   CONTROL,
-  CONTROL_DIGITAL,
-  CONTROL_ANALOG,
   CONFIG
 };
 
@@ -202,6 +201,7 @@ void HTMLHandlers() {
 
 void fsm() {
   static MenuState state = MAIN_MENU;
+  static ControlState control_state = CONTROL_DO1;
   switch (state) {
     case MAIN_MENU:
       // Manejar el menú principal
@@ -226,38 +226,83 @@ void fsm() {
       }
       delay(1000); // Actualizar cada segundo
       break;
-    case CONTROL:
-      // Manejar el control
+    case CONTROL_MENU:
+      // Manejar el menu de control
+      static bool control_menu = true;
       if (encoder_last_position != encoder.getPosition()) {
         print_control(encoder.getPosition());
         encoder_last_position = encoder.getPosition();
       }
       if (encoder.isButtonPressed()) {
-        switch (encoder.getPosition()){
-          case CONTROL_DO1:
-            state = CONTROL_DIGITAL;
-            break;
-          case CONTROL_DO2:
-            state = CONTROL_DIGITAL;
-            break;
-          case CONTROL_DO3:
-            state = CONTROL_DIGITAL;
-            break;
-          case CONTROL_AO1:
-            state = CONTROL_ANALOG;
-            break;
-          case CONTROL_EXIT:
-            state = MAIN_MENU;
-            break;
-          default:
-            break;          
-        }
+        state = (encoder.getPosition() == CONTROL_EXIT) ? MAIN_MENU : CONTROL; // Salir del menu de control o ir a control
         encoder_last_position = -1;
+        control_state = ControlState(encoder.getPosition());
         encoder.setPosition(0);
       }
       break;
-    case CONTROL_DIGITAL:
-    case CONTROL_ANALOG:
+    case CONTROL:
+      // Manejar el control
+      switch (control_state) {
+        case CONTROL_DO1:
+          if (encoder_last_position != encoder.getPosition()) {
+            control_digital(do1, "DO1");
+            encoder_last_position = encoder.getPosition();
+          }
+          if (encoder.isButtonPressed()) {
+            if (encoder.getPosition() == 0) {
+              do1.toggle();
+              control_digital(do1, "DO1");
+            }
+            else {
+              state = CONTROL_MENU;
+              encoder_last_position = -1;
+              encoder.setPosition(0);
+            }
+          }
+          break;
+        case CONTROL_DO2:
+          if (encoder_last_position != encoder.getPosition()) {
+            control_digital(do2, "DO2");
+            encoder_last_position = encoder.getPosition();
+          }
+          if (encoder.isButtonPressed()) {
+            if (encoder.getPosition() == 0) {
+              do2.toggle();
+              control_digital(do2, "DO2");
+            }
+            else {
+              state = CONTROL_MENU;
+              encoder_last_position = -1;
+              encoder.setPosition(0);
+            }
+          }
+          break;
+        case CONTROL_DO3:
+          if (encoder_last_position != encoder.getPosition()) {
+            control_digital(do3, "DO3");
+            encoder_last_position = encoder.getPosition();
+          }
+          if (encoder.isButtonPressed()) {
+            if (encoder.getPosition() == 0) {
+              do3.toggle();
+              control_digital(do3, "DO3");
+            }
+            else {
+              state = CONTROL_MENU;
+              encoder_last_position = -1;
+              encoder.setPosition(0);
+            }
+          }
+          break;
+        case CONTROL_AO1:
+          break;
+        case CONTROL_EXIT:
+          state = CONTROL_MENU;
+          encoder_last_position = -1;
+          encoder.setPosition(0);
+          break;
+      }
+      break;
     case CONFIG:
       // Manejar la configuración
       if (encoder.isButtonPressed()) {
@@ -313,6 +358,12 @@ void print_measurments() {
 }
 
 void print_control(int selected){
-  String controlItems[] = {"DO1", "DO2", "DO3", "AO1"};
-  print_menu(controlItems, 4, "Control");
+  String controlItems[] = {"DO1", "DO2", "DO3", "AO1", "Volver"};
+  print_menu(controlItems, 5, "Control");
+}
+
+void control_digital(DigitalGPIO d, String pinName){
+  String status = d.read() == HIGH ? "ON" : "OFF";
+  String options[] = {status, "Volver"};
+  print_menu(options, 2, pinName);
 }

@@ -14,6 +14,9 @@ void DigitalGPIO::write(int value) {
     digitalWrite(pin, value);
 }
 
+void DigitalGPIO::toggle() {
+    digitalWrite(pin, !digitalRead(pin));
+}
 
 AnalogGPIO::AnalogGPIO(uint8_t pin) : pin(pin) {}
 
