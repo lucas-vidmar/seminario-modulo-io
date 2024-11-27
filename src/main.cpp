@@ -1,6 +1,6 @@
 #include "main.h"
 
-static int encoder_last_position = -1;
+int encoder_last_position = -1;
 
 /* ------- Perisfericos ------- */
 BuiltInLed led = BuiltInLed();
@@ -92,7 +92,7 @@ void setup() {
   lcd.init();
   lcd.backlight();
   lcd.clear();
-  print_line(0, "Conectar al AP:");
+  print_line(0, "--Conectar al AP--");
   print_line(1, "IP: " + WiFi.softAPIP().toString());
   print_line(2, String("SSID: ") + ssid);
   print_line(3, String("Password: ") + password);
@@ -112,11 +112,7 @@ void loop(){
   encoder.update();
   #endif
 
-  
-  if (encoder_last_position != encoder.getPosition()) {
-    print_menu(encoder.getPosition());
-    encoder_last_position = encoder.getPosition();
-  }
+  fsm();
 }
 
 void HTMLHandlers() {
@@ -200,9 +196,49 @@ void HTMLHandlers() {
 
 }
 
+void fsm() {
+  static MenuState state = MAIN_MENU;
+  switch (state) {
+    case MAIN_MENU:
+      // Manejar el menú principal
+      if (encoder_last_position != encoder.getPosition()) {
+        print_menu(encoder.getPosition());
+        encoder_last_position = encoder.getPosition();
+      }
+      if (encoder.isButtonPressed()) {
+        state = MenuState(encoder.getPosition() + 1);
+        encoder_last_position = -1;
+      }
+      break;
+    case MEASUREMENTS:
+      // Manejar las mediciones
+      print_measurments();
+      if (encoder.isButtonPressed()) {
+        state = MAIN_MENU;
+        encoder_last_position = -1;
+      }
+      delay(1000); // Actualizar cada segundo
+      break;
+    case CONTROL:
+      // Manejar el control
+      if (encoder.isButtonPressed()) {
+        state = MAIN_MENU;
+        encoder_last_position = -1;
+      }
+      break;
+    case CONFIG:
+      // Manejar la configuración
+      if (encoder.isButtonPressed()) {
+        state = MAIN_MENU;
+        encoder_last_position = -1;
+      }
+      break;
+  }
+}
+
 void print_menu(int selected) {
   lcd.clear();
-  print_line(0, "Menu principal");
+  print_line(0, "--Menu principal--");
   String menuItems[] = {"Mediciones", "Control", "Configuracion"};
   for (int i = 0; i < 3; i++) {
     if (i == selected) {
@@ -221,4 +257,13 @@ void print_line(int line, String text) {
   #ifdef USE_LCD
   Serial.print(text);
   #endif
+}
+
+void print_measurments() {
+  lcd.clear();
+  print_line(0, "--Mediciones--");
+  // Dos columnas, una digital y una analógica
+  print_line(1, "DI1: " + String(digitalRead(DI1) ? "ON" : "OFF") + " | AI1: " + String(analogRead(AI1)));
+  print_line(2, "DI2: " + String(digitalRead(DI2) ? "ON" : "OFF") + " | AI2: " + String(analogRead(AI2)));
+  print_line(3, "DI3: " + String(digitalRead(DI3) ? "ON" : "OFF"));
 }

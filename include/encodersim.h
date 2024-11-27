@@ -1,18 +1,12 @@
-#ifndef SIMULATED_ENCODER_H
-#define SIMULATED_ENCODER_H
+#pragma once
 
 #include <Arduino.h>
 
-// Definiciones de pines y comandos
-#define SIMENCODER_CLK GPIO_NUM_12
-#define SIMENCODER_DT GPIO_NUM_13
-#define SIMENCODER_SW GPIO_NUM_14
+// Definiciones de comandos
 #define SIMENCODER_DEBOUNCE 15  // Tiempo de debounce en milisegundos
-
-#define SIMENCODER_UP 'u'
-#define SIMENCODER_DOWN 'd'
-#define SIMENCODER_PRESS 'p'
-#define SIMENCODER_RELEASE 'r'
+#define SIMENCODER_UP '6'
+#define SIMENCODER_DOWN '4'
+#define SIMENCODER_PRESS '5'
 
 class SimulatedEncoder {
 public:
@@ -36,11 +30,4 @@ private:
     bool buttonPressed;
     int encoderMaxPosition;
     int encoderMinPosition;
-
-    // Variables para el estado del botón y debounce
-    bool buttonState;
-    unsigned long lastUpdateTime;
-    unsigned long lastButtonTime;
 };
-
-#endif // SIMULATED_ENCODER_H

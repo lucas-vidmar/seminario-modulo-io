@@ -1,7 +1,7 @@
 #include "encodersim.h"
 
 SimulatedEncoder::SimulatedEncoder()
-    : position(0), buttonPressed(false), encoderMaxPosition(10), encoderMinPosition(1), buttonState(false) { }
+    : position(0), buttonPressed(false), encoderMaxPosition(10), encoderMinPosition(1) { }
 
 void SimulatedEncoder::init() {
     Serial.println("SimulatedEncoder inicializado.");
@@ -9,7 +9,6 @@ void SimulatedEncoder::init() {
     Serial.print("  '"); Serial.print(SIMENCODER_UP); Serial.println("' - Girar hacia arriba (incrementar posición)");
     Serial.print("  '"); Serial.print(SIMENCODER_DOWN); Serial.println("' - Girar hacia abajo (decrementar posición)");
     Serial.print("  '"); Serial.print(SIMENCODER_PRESS); Serial.println("' - Pulsar el botón");
-    Serial.print("  '"); Serial.print(SIMENCODER_RELEASE); Serial.println("' - Soltar el botón");
 }
 
 void SimulatedEncoder::update() {
@@ -39,13 +38,7 @@ void SimulatedEncoder::update() {
                 }
                 break;
             case SIMENCODER_PRESS:
-                if (!buttonState) {
-                    buttonPressed = true;
-                    buttonState = true;
-                }
-                break;
-            case SIMENCODER_RELEASE:
-                buttonState = false;
+                buttonPressed = true;
                 break;
             default:
                 // Ignorar otros caracteres

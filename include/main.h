@@ -16,6 +16,8 @@
 void HTMLHandlers();
 void print_menu(int selected);
 void print_line(int line, String text);
+void fsm();
+void print_measurments();
 
 // Define GPIOs
 #define DI1 GPIO_NUM_26
