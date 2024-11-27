@@ -14,10 +14,11 @@
 #include "encodersim.h"
 
 void HTMLHandlers();
-void print_menu(int selected);
+void print_menu(String options[],int options_size, String title);
 void print_line(int line, String text);
 void fsm();
 void print_measurments();
+void print_control(int selected);
 
 // Define GPIOs
 #define DI1 GPIO_NUM_26

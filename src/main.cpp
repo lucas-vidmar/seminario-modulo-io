@@ -41,9 +41,18 @@ enum MenuState {
   MAIN_MENU,
   MEASUREMENTS,
   CONTROL,
+  CONTROL_DIGITAL,
+  CONTROL_ANALOG,
   CONFIG
 };
 
+enum ControlState {
+  CONTROL_DO1,
+  CONTROL_DO2,
+  CONTROL_DO3,
+  CONTROL_AO1,
+  CONTROL_EXIT
+};
 
 void setup() {
 
@@ -97,14 +106,9 @@ void setup() {
   print_line(2, String("SSID: ") + ssid);
   print_line(3, String("Password: ") + password);
 
-  delay(5000); // Esperar 5 segundos para que el usuario pueda ver la información
+  //delay(5000); // Esperar 5 segundos para que el usuario pueda ver la información
 
-  // Imprimir menu en la pantalla
-  encoder.setMaxPosition(2);
-  encoder.setMinPosition(0);
   encoder.setPosition(0);
-  print_menu(0);
-
 }
 
 void loop(){
@@ -202,12 +206,14 @@ void fsm() {
     case MAIN_MENU:
       // Manejar el menú principal
       if (encoder_last_position != encoder.getPosition()) {
-        print_menu(encoder.getPosition());
+        String menuOptions[] = {"Mediciones", "Control", "Configuración"};
+        print_menu(menuOptions, 3, "Menú principal");
         encoder_last_position = encoder.getPosition();
       }
       if (encoder.isButtonPressed()) {
         state = MenuState(encoder.getPosition() + 1);
         encoder_last_position = -1;
+        encoder.setPosition(0);
       }
       break;
     case MEASUREMENTS:
@@ -216,16 +222,42 @@ void fsm() {
       if (encoder.isButtonPressed()) {
         state = MAIN_MENU;
         encoder_last_position = -1;
+        encoder.setPosition(0);
       }
       delay(1000); // Actualizar cada segundo
       break;
     case CONTROL:
       // Manejar el control
+      if (encoder_last_position != encoder.getPosition()) {
+        print_control(encoder.getPosition());
+        encoder_last_position = encoder.getPosition();
+      }
       if (encoder.isButtonPressed()) {
-        state = MAIN_MENU;
+        switch (encoder.getPosition()){
+          case CONTROL_DO1:
+            state = CONTROL_DIGITAL;
+            break;
+          case CONTROL_DO2:
+            state = CONTROL_DIGITAL;
+            break;
+          case CONTROL_DO3:
+            state = CONTROL_DIGITAL;
+            break;
+          case CONTROL_AO1:
+            state = CONTROL_ANALOG;
+            break;
+          case CONTROL_EXIT:
+            state = MAIN_MENU;
+            break;
+          default:
+            break;          
+        }
         encoder_last_position = -1;
+        encoder.setPosition(0);
       }
       break;
+    case CONTROL_DIGITAL:
+    case CONTROL_ANALOG:
     case CONFIG:
       // Manejar la configuración
       if (encoder.isButtonPressed()) {
@@ -236,18 +268,30 @@ void fsm() {
   }
 }
 
-void print_menu(int selected) {
+void print_menu(String options[],int options_size, String title) {
   lcd.clear();
-  print_line(0, "--Menu principal--");
-  String menuItems[] = {"Mediciones", "Control", "Configuracion"};
-  for (int i = 0; i < 3; i++) {
-    if (i == selected) {
-      menuItems[i] = ">" + menuItems[i]; // Agregar un indicador de selección
+  encoder.setMinPosition(0);
+  encoder.setMaxPosition(options_size - 1);
+  int selected = encoder.getPosition();
+  print_line(0, "--" + title + "--");
+  int options_to_print = min(LCD_ROWS - 1, options_size);
+
+  String menuItems[options_to_print];
+  int group = selected / (LCD_ROWS - 1);
+  int start = group * (LCD_ROWS - 1);
+  for (int i = 0; i < options_to_print; i++) {
+    if (start + i >= options_size) {
+      break;
+    }
+    if (start + i == selected) {
+      menuItems[i] = ">" + options[start + i]; // Agregar un indicador de selección
+    } else {
+      menuItems[i] = options[start + i];
     }
   }
-  for (int i = 0; i < 3; i++) {
+  for (int i = 0; i < options_to_print; i++) {
     print_line(i+1, menuItems[i]); // Imprimir cada elemento del menú
-  }
+  } 
   
 }
 
@@ -266,4 +310,9 @@ void print_measurments() {
   print_line(1, "DI1: " + String(digitalRead(DI1) ? "ON" : "OFF") + " | AI1: " + String(analogRead(AI1)));
   print_line(2, "DI2: " + String(digitalRead(DI2) ? "ON" : "OFF") + " | AI2: " + String(analogRead(AI2)));
   print_line(3, "DI3: " + String(digitalRead(DI3) ? "ON" : "OFF"));
+}
+
+void print_control(int selected){
+  String controlItems[] = {"DO1", "DO2", "DO3", "AO1"};
+  print_menu(controlItems, 4, "Control");
 }
