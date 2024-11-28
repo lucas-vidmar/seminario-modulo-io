@@ -20,6 +20,7 @@ void fsm();
 void print_measurments();
 void print_control(int selected);
 void control_digital(DigitalGPIO d, String pinName);
+void control_analog(AnalogGPIO a, String pinName);
 
 // Define GPIOs
 #define DI1 GPIO_NUM_26

@@ -89,7 +89,7 @@ void setup() {
 
   // Configurar manejadores para rutas
   Serial.println("Configurando manejadores de rutas...");
-  HTMLHandlers();
+  //HTMLHandlers();
   
   // Iniciar el servidor web
   Serial.println("Iniciando servidor web...");
@@ -295,6 +295,30 @@ void fsm() {
           }
           break;
         case CONTROL_AO1:
+          if (encoder_last_position != encoder.getPosition()) {
+            control_analog(ao1, "AO1");
+            encoder_last_position = encoder.getPosition();
+          }
+          if (encoder.isButtonPressed()) {
+            if (encoder.getPosition() == 0) {
+              encoder_last_position = -1;
+              while (!encoder.isButtonPressed()) { // Esperar hasta que se presione el botón
+                if (encoder_last_position != encoder.getPosition()) {
+                  encoder.setMinPosition(0);
+                  encoder.setMaxPosition(255); // Settear valor entre 0 y 255
+                  ao1.write(encoder.getPosition());
+                  control_analog(ao1, "AO1");
+                  encoder_last_position = encoder.getPosition();
+                }
+                encoder.update();
+              }
+            }
+            else {
+              state = CONTROL_MENU;
+              encoder_last_position = -1;
+              encoder.setPosition(0);
+            }
+          }
           break;
         case CONTROL_EXIT:
           state = CONTROL_MENU;
@@ -363,7 +387,13 @@ void print_control(int selected){
 }
 
 void control_digital(DigitalGPIO d, String pinName){
-  String status = d.read() == HIGH ? "ON" : "OFF";
+  String status = d.read() == HIGH ? "OFF" : "ON";
   String options[] = {status, "Volver"};
+  print_menu(options, 2, pinName);
+}
+
+void control_analog(AnalogGPIO a, String pinName){
+  String current_value = "Valor: " + String(a.read());
+  String options[] = {current_value, "Volver"};
   print_menu(options, 2, pinName);
 }
