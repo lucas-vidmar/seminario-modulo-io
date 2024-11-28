@@ -237,21 +237,21 @@
       fetch('/readDI1')
         .then(response => response.text())
         .then(state => {
-          document.getElementById('DI1').innerText = state === '1' ? 'ON' : 'OFF';
+          document.getElementById('DI1').innerText = state === '1' ? 'OFF' : 'ON';
         })
         .catch(error => console.error('Error al leer DI1:', error));
   
       fetch('/readDI2')
         .then(response => response.text())
         .then(state => {
-          document.getElementById('DI2').innerText = state === '1' ? 'ON' : 'OFF';
+          document.getElementById('DI2').innerText = state === '1' ? 'OFF' : 'ON';
         })
         .catch(error => console.error('Error al leer DI2:', error));
   
       fetch('/readDI3')
         .then(response => response.text())
         .then(state => {
-          document.getElementById('DI3').innerText = state === '1' ? 'ON' : 'OFF';
+          document.getElementById('DI3').innerText = state === '1' ? 'OFF' : 'ON';
         })
         .catch(error => console.error('Error al leer DI3:', error));
     }

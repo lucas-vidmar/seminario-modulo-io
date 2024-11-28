@@ -352,9 +352,9 @@ void print_measurments() {
   lcd.clear();
   print_line(0, "--Mediciones--");
   // Dos columnas, una digital y una analógica
-  print_line(1, "DI1: " + String(digitalRead(DI1) ? "ON" : "OFF") + " | AI1: " + String(analogRead(AI1)));
-  print_line(2, "DI2: " + String(digitalRead(DI2) ? "ON" : "OFF") + " | AI2: " + String(analogRead(AI2)));
-  print_line(3, "DI3: " + String(digitalRead(DI3) ? "ON" : "OFF"));
+  print_line(1, "DI1: " + String(digitalRead(DI1) ? "OFF" : "ON") + " | AI1: " + String(analogRead(AI1)));
+  print_line(2, "DI2: " + String(digitalRead(DI2) ? "OFF" : "ON") + " | AI2: " + String(analogRead(AI2)));
+  print_line(3, "DI3: " + String(digitalRead(DI3) ? "OFF" : "ON"));
 }
 
 void print_control(int selected){
