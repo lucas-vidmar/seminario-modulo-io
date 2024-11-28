@@ -26,8 +26,8 @@ void control_digital(DigitalGPIO d, String pinName);
 #define DI2 GPIO_NUM_27
 #define DI3 GPIO_NUM_36
 #define DO1 GPIO_NUM_15
-#define DO2 GPIO_NUM_32
-#define DO3 GPIO_NUM_33
+#define DO2 GPIO_NUM_33
+#define DO3 GPIO_NUM_32
 #define AI1 GPIO_NUM_34
 #define AI2 GPIO_NUM_35
 #define AO1 GPIO_NUM_25
