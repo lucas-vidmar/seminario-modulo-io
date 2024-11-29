@@ -34,7 +34,7 @@ DigitalGPIO do3 = DigitalGPIO(DO3, OUTPUT);
 // AI: 34 35 | AO: 25
 AnalogGPIO ai1 = AnalogGPIO(AI1);
 AnalogGPIO ai2 = AnalogGPIO(AI2);
-AnalogGPIO ao1 = AnalogGPIO(AO1);
+//AnalogGPIO ao1 = AnalogGPIO(AO1);
 
 /* ------- Menu ------- */
 enum MenuState {
@@ -71,8 +71,9 @@ void setup() {
   // Inicializacion de perifericos
   Serial.println("Inicializando periféricos...");
   i2c.init();
-  //dac.init(&i2c);
-  //adc.init(&i2c);
+  dac.init(&i2c);
+  dac.digitalWrite(4095);
+  adc.init(&i2c);
   encoder.init();
 
   // Setup pines
@@ -85,11 +86,11 @@ void setup() {
   do3.setup();
   ai1.setup();
   ai2.setup();
-  ao1.setup();
+  //ao1.setup();
 
   // Configurar manejadores para rutas
   Serial.println("Configurando manejadores de rutas...");
-  //HTMLHandlers();
+  HTMLHandlers();
   
   // Iniciar el servidor web
   Serial.println("Iniciando servidor web...");
@@ -115,7 +116,7 @@ void loop(){
   encoder.update();
   #endif
 
-  fsm();
+  //fsm();
 }
 
 void HTMLHandlers() {
@@ -149,15 +150,33 @@ void HTMLHandlers() {
     request->send(200, "text/plain", String(value));
   });
 
+  webServer.on("/readAI1*", HTTP_GET, [](AsyncWebServerRequest *request){
+    int value = adc.read_voltage(0);
+    request->send(200, "text/plain", String(value));
+  });
+
+  webServer.on("/readAI2*", HTTP_GET, [](AsyncWebServerRequest *request){
+    int value = adc.read_voltage(1);
+    request->send(200, "text/plain", String(value));
+  });
+
+  webServer.on("/readAI3*", HTTP_GET, [](AsyncWebServerRequest *request){
+    int value = adc.read_voltage(2);
+    request->send(200, "text/plain", String(value));
+  });
+
+  webServer.on("/readAI4*", HTTP_GET, [](AsyncWebServerRequest *request){
+    int value = adc.read_voltage(3);
+    request->send(200, "text/plain", String(value));
+  });
+
   // Ajustar salida analógica
-  webServer.on("/setAO1", HTTP_GET, [](AsyncWebServerRequest *request){
+  webServer.on("/setAO1*", HTTP_GET, [](AsyncWebServerRequest *request){
     if (request->hasParam("value")) {
       String valueStr = request->getParam("value")->value();
       int value = valueStr.toInt();
-      // Mapear el valor de 1-100 a 0-255 para el DAC
-      int dacValue = map(value, 1, 100, 0, 255);
-      dacWrite(AO1, dacValue);
-      request->send(200, "text/plain", "AO1 ajustado a " + valueStr);
+      dac.digitalWrite(value);
+      request->send(200, "text/plain", "AO1* ajustado a " + valueStr);
     } else {
       request->send(400, "text/plain", "Falta el parámetro 'value'");
     }
@@ -220,9 +239,11 @@ void fsm() {
       // Manejar las mediciones
       print_measurments();
       if (encoder.isButtonPressed()) {
-        state = MAIN_MENU;
-        encoder_last_position = -1;
-        encoder.setPosition(0);
+        if (encoder.getPosition() == 9) {
+          state = MAIN_MENU;
+          encoder_last_position = -1;
+          encoder.setPosition(0);
+        }
       }
       delay(1000); // Actualizar cada segundo
       break;
@@ -295,30 +316,6 @@ void fsm() {
           }
           break;
         case CONTROL_AO1:
-          if (encoder_last_position != encoder.getPosition()) {
-            control_analog(ao1, "AO1");
-            encoder_last_position = encoder.getPosition();
-          }
-          if (encoder.isButtonPressed()) {
-            if (encoder.getPosition() == 0) {
-              encoder_last_position = -1;
-              while (!encoder.isButtonPressed()) { // Esperar hasta que se presione el botón
-                if (encoder_last_position != encoder.getPosition()) {
-                  encoder.setMinPosition(0);
-                  encoder.setMaxPosition(255); // Settear valor entre 0 y 255
-                  ao1.write(encoder.getPosition());
-                  control_analog(ao1, "AO1");
-                  encoder_last_position = encoder.getPosition();
-                }
-                encoder.update();
-              }
-            }
-            else {
-              state = CONTROL_MENU;
-              encoder_last_position = -1;
-              encoder.setPosition(0);
-            }
-          }
           break;
         case CONTROL_EXIT:
           state = CONTROL_MENU;
@@ -374,11 +371,19 @@ void print_line(int line, String text) {
 
 void print_measurments() {
   lcd.clear();
-  print_line(0, "--Mediciones--");
-  // Dos columnas, una digital y una analógica
-  print_line(1, "DI1: " + String(digitalRead(DI1) ? "OFF" : "ON") + " | AI1: " + String(analogRead(AI1)));
-  print_line(2, "DI2: " + String(digitalRead(DI2) ? "OFF" : "ON") + " | AI2: " + String(analogRead(AI2)));
-  print_line(3, "DI3: " + String(digitalRead(DI3) ? "OFF" : "ON"));
+  String options[]= {
+    "DI1: " + String(digitalRead(DI1) ? "OFF" : "ON"),
+    "DI2: " + String(digitalRead(DI2) ? "OFF" : "ON"),
+    "DI3: " + String(digitalRead(DI3) ? "OFF" : "ON"),
+    "AI1: " + String(analogRead(AI1)),
+    "AI2: " + String(analogRead(AI2)),
+    "AI1*: " + String(adc.read_voltage(0)),
+    "AI2*: " + String(adc.read_voltage(1)),
+    "AI3*: " + String(adc.read_voltage(2)),
+    "AI4*: " + String(adc.read_voltage(3)),
+    "Volver"
+  };
+  print_menu(options, 10, "Mediciones");
 }
 
 void print_control(int selected){

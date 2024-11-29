@@ -31,4 +31,4 @@ void control_analog(AnalogGPIO a, String pinName);
 #define DO3 GPIO_NUM_32
 #define AI1 GPIO_NUM_34
 #define AI2 GPIO_NUM_35
-#define AO1 GPIO_NUM_25
+//#define AO1 GPIO_NUM_25

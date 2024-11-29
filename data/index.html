@@ -184,6 +184,22 @@
             <td>AI2</td>
             <td id="AI2">--</td>
           </tr>
+          <tr>
+            <td>AI1*</td>
+            <td id="AI1*">--</td>
+          </tr>
+          <tr>
+            <td>AI2*</td>
+            <td id="AI2*">--</td>
+          </tr>
+          <tr>
+            <td>AI3*</td>
+            <td id="AI3*">--</td>
+          </tr>
+          <tr>
+            <td>AI4*</td>
+            <td id="AI4*">--</td>
+          </tr>
         </table>
       </div>
     </div>
@@ -193,14 +209,14 @@
       <h3>Salidas</h3>
       
       <div style="background-color: antiquewhite; padding: 10px;" class="border">
-        <!-- AO1 -->
-        <div style="text-align: left; margin: 10px; font-weight: bold;">AO1</div>
+        <!-- AO1* -->
+        <div style="text-align: left; margin: 10px; font-weight: bold;">AO1*</div>
         <div class="slidecontainer">
-          <div style="padding-left: 10px; padding-right: 10px;">V1</div>
-          <input type="range" min="1" max="100" value="1" class="slider" id="AO1">
-          <div style="padding-left: 10px; padding-right: 10px;">V2</div>
+          <div style="padding-left: 10px; padding-right: 10px;">0V</div>
+          <input type="range" min="0" max="4095" value="0" class="slider" id="AO1*">
+          <div style="padding-left: 10px; padding-right: 10px;">5V</div>
         </div>
-        <span id="AO1Value">0</span>
+        <span id="AO1*Value">0</span>
 
         <!-- DO1 -->
         <br>
@@ -271,18 +287,43 @@
           document.getElementById('AI2').innerText = value;
         })
         .catch(error => console.error('Error al leer AI2:', error));
+      fetch('/readAI1*')
+        .then(response => response.text())
+        .then(value => {
+          document.getElementById('AI1*').innerText = value;
+        })
+        .catch(error => console.error('Error al leer AI1*:', error));
+      fetch('/readAI2*')
+        .then(response => response.text())
+        .then(value => {
+          document.getElementById('AI2*').innerText = value;
+        })
+        .catch(error => console.error('Error al leer AI2*:', error));
+      fetch('/readAI3*')
+        .then(response => response.text())
+        .then(value => {
+          document.getElementById('AI3*').innerText = value;
+        })
+        .catch(error => console.error('Error al leer AI3*:', error));
+      fetch('/readAI4*')
+        .then(response => response.text())
+        .then(value => {
+          document.getElementById('AI4*').innerText = value;
+        })
+        .catch(error => console.error('Error al leer AI4*:', error));
     }
   
     // Event listener para el slider de salida analógica
-    document.getElementById('AO1').addEventListener('input', function() {
+    document.getElementById('AO1*').addEventListener('input', function() {
       var value = this.value;
-      document.getElementById('AO1Value').innerText = value;
-      fetch('/setAO1?value=' + value)
+      var voltage = (value * 5 / 4095).toFixed(2);
+      document.getElementById('AO1*Value').innerText = voltage+'V';
+      fetch('/setAO1*?value=' + value)
         .then(response => response.text())
         .then(data => {
-          console.log('AO1 ajustado a:', value);
+          console.log('AO1* ajustado a:', value);
         })
-        .catch(error => console.error('Error al ajustar AO1:', error));
+        .catch(error => console.error('Error al ajustar AO1*:', error));
     });
   
     // Event listeners para las salidas digitales

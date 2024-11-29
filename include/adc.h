@@ -56,33 +56,15 @@ public:
     void init(I2C* i2c_pointer);
 
     /**
-     * @brief Reads the current from the Device Under Test (DUT).
+     * @brief Reads the voltage from the specified ADC channel.
      * 
-     * This function measures and returns the current flowing through the DUT.
+     * This function reads the analog voltage from the given ADC channel and 
+     * returns the corresponding voltage value as a float.
      * 
-     * @return float The current value in amperes.
+     * @param channel The ADC channel to read from (0-255).
+     * @return float The voltage read from the specified ADC channel.
      */
-    float read_iDUT();
-
-    /**
-     * @brief Reads the temperature from the sensor.
-     * 
-     * This function interfaces with the temperature sensor to obtain the current
-     * temperature reading. The temperature value is returned as a floating-point
-     * number representing the temperature in degrees Celsius.
-     * 
-     * @return float The current temperature in degrees Celsius.
-     */
-    float read_temperature();
-
-    /**
-     * @brief Reads the voltage from the Device Under Test (DUT).
-     * 
-     * This function measures and returns the voltage value from the DUT.
-     * 
-     * @return float The voltage value read from the DUT.
-     */
-    float read_vDUT();
+    float read_voltage(uint8_t channel);
 
 private:
     /**
@@ -100,15 +82,4 @@ private:
      * @param value Pointer to an int16_t variable where the read value will be stored.
      */
     void read(uint8_t channel, int16_t* value);
-
-    /**
-     * @brief Reads the voltage from the specified ADC channel.
-     * 
-     * This function reads the analog voltage from the given ADC channel and 
-     * returns the corresponding voltage value as a float.
-     * 
-     * @param channel The ADC channel to read from (0-255).
-     * @return float The voltage read from the specified ADC channel.
-     */
-    float read_voltage(uint8_t channel);
 };
