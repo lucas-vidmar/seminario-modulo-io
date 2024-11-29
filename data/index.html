@@ -290,25 +290,25 @@
       fetch('/readAI1*')
         .then(response => response.text())
         .then(value => {
-          document.getElementById('AI1*').innerText = value;
+          document.getElementById('AI1*').innerText = value + 'V';
         })
         .catch(error => console.error('Error al leer AI1*:', error));
       fetch('/readAI2*')
         .then(response => response.text())
         .then(value => {
-          document.getElementById('AI2*').innerText = value;
+          document.getElementById('AI2*').innerText = value + 'V';
         })
         .catch(error => console.error('Error al leer AI2*:', error));
       fetch('/readAI3*')
         .then(response => response.text())
         .then(value => {
-          document.getElementById('AI3*').innerText = value;
+          document.getElementById('AI3*').innerText = value + 'V';
         })
         .catch(error => console.error('Error al leer AI3*:', error));
       fetch('/readAI4*')
         .then(response => response.text())
         .then(value => {
-          document.getElementById('AI4*').innerText = value;
+          document.getElementById('AI4*').innerText = value + 'V';
         })
         .catch(error => console.error('Error al leer AI4*:', error));
     }

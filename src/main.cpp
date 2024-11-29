@@ -151,23 +151,23 @@ void HTMLHandlers() {
   });
 
   webServer.on("/readAI1*", HTTP_GET, [](AsyncWebServerRequest *request){
-    int value = adc.read_voltage(0);
-    request->send(200, "text/plain", String(value));
+    float value = adc.read_voltage(0);
+    request->send(200, "text/plain", String(value,2));
   });
 
   webServer.on("/readAI2*", HTTP_GET, [](AsyncWebServerRequest *request){
-    int value = adc.read_voltage(1);
-    request->send(200, "text/plain", String(value));
+    float value = adc.read_voltage(1);
+    request->send(200, "text/plain", String(value,2));
   });
 
   webServer.on("/readAI3*", HTTP_GET, [](AsyncWebServerRequest *request){
-    int value = adc.read_voltage(2);
-    request->send(200, "text/plain", String(value));
+    float value = adc.read_voltage(2);
+    request->send(200, "text/plain", String(value,2));
   });
 
   webServer.on("/readAI4*", HTTP_GET, [](AsyncWebServerRequest *request){
-    int value = adc.read_voltage(3);
-    request->send(200, "text/plain", String(value));
+    float value = adc.read_voltage(3);
+    request->send(200, "text/plain", String(value,2));
   });
 
   // Ajustar salida analógica
