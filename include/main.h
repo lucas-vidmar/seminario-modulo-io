@@ -39,6 +39,7 @@
 #define PWMFREQ 50
 
 #define USE_LCD
+#define USE_ENCODER
 
 /**
  * @brief Inicializa y configura los manejadores de HTML.

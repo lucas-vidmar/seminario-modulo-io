@@ -106,3 +106,7 @@ bool Encoder::moved(){
     }
     return false;
 }
+
+void Encoder::update() {
+    // Nothing to do here
+}
