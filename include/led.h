@@ -1,14 +1,11 @@
-
 /**
  * @file led.h
- * @brief Header file for the BuiltInLed class.
+ * @brief Archivo de encabezado para la clase BuiltInLed.
  * 
- * This file contains the declaration of the BuiltInLed class, which provides methods
- * to control the built-in LED on a microcontroller. The class includes functionality
- * to initialize the LED hardware and to make the LED blink at a specified interval.
+ * Este archivo contiene la declaración de la clase BuiltInLed, que proporciona métodos
+ * para controlar el LED incorporado en un microcontrolador. La clase incluye funcionalidad
+ * para inicializar el hardware del LED y hacer que el LED parpadee a un intervalo especificado.
  * 
- * 
- * @date 2024-11-01
  */
 #pragma once
 
@@ -18,44 +15,44 @@
 
 /**
  * @class BuiltInLed
- * @brief A class to control the built-in LED on a microcontroller.
+ * @brief Una clase para controlar el LED incorporado en un microcontrolador.
  * 
- * The BuiltInLed class provides methods to initialize and control the built-in LED
- * on a microcontroller. It includes functionality to initialize the LED hardware
- * and to make the LED blink at a specified interval.
+ * La clase BuiltInLed proporciona métodos para inicializar y controlar el LED incorporado
+ * en un microcontrolador. Incluye funcionalidad para inicializar el hardware del LED
+ * y hacer que el LED parpadee a un intervalo especificado.
  */
 class BuiltInLed {
     
 public:
     /**
-     * @brief Constructor for the BuiltInLed class.
+     * @brief Constructor de la clase BuiltInLed.
      * 
-     * This constructor initializes the built-in LED on the microcontroller.
+     * Este constructor inicializa el LED incorporado en el microcontrolador.
      */
     BuiltInLed();
 
     /**
-     * @brief Initializes the LED hardware.
+     * @brief Inicializa el hardware del LED.
      * 
-     * This function sets up the necessary configurations to initialize the LED hardware.
-     * It should be called before any other LED-related functions are used.
+     * Esta función configura las configuraciones necesarias para inicializar el hardware del LED.
+     * Debe ser llamada antes de usar cualquier otra función relacionada con el LED.
      */
     void init();
 
     /**
-     * @brief Blink an LED at a specified interval.
+     * @brief Hace parpadear un LED a un intervalo especificado.
      * 
-     * This function will cause the LED to blink on and off at the interval specified
-     * by the parameter. The interval is given in milliseconds.
+     * Esta función hará que el LED parpadee encendiéndose y apagándose en el intervalo especificado
+     * por el parámetro. El intervalo se da en milisegundos.
      * 
-     * @param interval The time in milliseconds for the LED to stay on or off.
+     * @param interval El tiempo en milisegundos para que el LED permanezca encendido o apagado.
      */
     void blink(int interval);
 
     /**
-     * @brief Toggles the state of the LED.
+     * @brief Alterna el estado del LED.
      * 
-     * This function changes the state of the LED from on to off or from off to on.
+     * Esta función cambia el estado del LED de encendido a apagado o de apagado a encendido.
      */
     void toggle();
 
@@ -63,10 +60,10 @@ private:
     hw_timer_t *timer;
 
     /**
-     * @brief Static method to handle timer events.
+     * @brief Método estático para manejar eventos de temporizador.
      * 
-     * This method is called when a timer event occurs. It is responsible for
-     * executing the necessary actions associated with the timer.
+     * Este método se llama cuando ocurre un evento de temporizador. Es responsable de
+     * ejecutar las acciones necesarias asociadas con el temporizador.
      */
     static void onTimer();
 };

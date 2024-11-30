@@ -1,16 +1,16 @@
 /**
  * @file encoder.h
- * @brief Header file for the Encoder class.
+ * @brief Archivo de encabezado para la clase Encoder.
  * 
- * This file contains the definition and documentation for the Encoder class, 
- * which provides functionality for interfacing with a rotary encoder. The 
- * Encoder class includes methods for initializing the encoder, checking button 
- * presses, retrieving and setting the encoder position, and handling interrupts.
+ * Este archivo contiene la definición y documentación para la clase Encoder,
+ * que proporciona funcionalidad para interactuar con un codificador rotatorio.
+ * La clase Encoder incluye métodos para inicializar el codificador, verificar
+ * pulsaciones de botones, recuperar y establecer la posición del codificador,
+ * y manejar interrupciones.
  * 
- * @note This class assumes that the underlying hardware supports rotary encoders.
- * @note This class assumes only one encoder is used.
+ * @note Esta clase asume que el hardware subyacente soporta codificadores rotatorios.
+ * @note Esta clase asume que solo se usa un codificador.
  * 
- * @date 2024-11-01
  */
 #pragma once
 
@@ -23,91 +23,124 @@
 #define ENCODER_BUTTON_DEBOUNCE 200
 #define ENCODER_BUTTON_LONG_PRESS 1000
 
+/**
+ * @class Encoder
+ * @brief Clase para manejar un codificador rotativo.
+ * 
+ * La clase Encoder proporciona una interfaz para interactuar con un codificador rotativo,
+ * permitiendo inicializarlo, leer su posición, verificar el estado del botón y manejar
+ * interrupciones asociadas.
+ * 
+ * @note Esta clase está diseñada para ser utilizada en sistemas embebidos donde el manejo
+ * de interrupciones y la eficiencia son críticos.
+ */
 class Encoder {
 public:
 
     /**
-     * @brief Construct a new Encoder object.
+     * @brief Construir un nuevo objeto Encoder.
      * 
-     * This constructor initializes a new instance of the Encoder class.
+     * Este constructor inicializa una nueva instancia de la clase Encoder.
      */
     Encoder();
 
     /**
-     * @brief Initializes the encoder.
+     * @brief Inicializa el codificador.
      * 
-     * This function sets up the necessary configurations and initializes the encoder
-     * for use. It should be called before any other encoder-related functions.
+     * Esta función configura las configuraciones necesarias e inicializa el codificador
+     * para su uso. Debe ser llamada antes de cualquier otra función relacionada con el codificador.
      */
     void init();
 
     /**
-     * @brief Checks if the button is pressed.
+     * @brief Verifica si el botón está presionado.
      * 
-     * This function returns a boolean value indicating whether the button
-     * associated with the encoder is currently pressed.
+     * Esta función devuelve un valor booleano que indica si el botón
+     * asociado con el codificador está actualmente presionado.
      * 
-     * @return true if the button is pressed, false otherwise.
+     * @return true si el botón está presionado, false en caso contrario.
      */
     bool isButtonPressed();
 
     /**
-     * @brief Retrieves the current position of the encoder.
+     * @brief Recupera la posición actual del codificador.
      * 
-     * @return int The current position value of the encoder.
+     * @return int El valor de la posición actual del codificador.
      */
     int getPosition();
 
     /**
-     * @brief Sets the position of the encoder.
+     * @brief Establece la posición del codificador.
      * 
-     * This function updates the current position of the encoder to the specified value.
+     * Esta función actualiza la posición actual del codificador al valor especificado.
      * 
-     * @param pos The new position to set for the encoder.
+     * @param pos La nueva posición para establecer en el codificador.
      */
     void setPosition(int pos);
 
     /**
-     * @brief Resets the state of the button.
+     * @brief Restablece el estado del botón.
      * 
-     * This function is used to reset any state or counters associated with the button.
-     * It should be called when the button needs to be reinitialized or cleared.
+     * Esta función se utiliza para restablecer cualquier estado o contador asociado con el botón.
+     * Debe ser llamada cuando el botón necesita ser reinicializado o limpiado.
      */
     void resetButton();
 
+    /**
+     * @brief Establece la posición máxima para el codificador.
+     * 
+     * Esta función establece el límite superior para la posición del codificador. El codificador
+     * no reportará posiciones superiores a este valor.
+     * 
+     * @param maxPos El valor de la posición máxima a establecer.
+     */
     void setMaxPosition(int maxPos);
 
+    /**
+     * @brief Establece la posición mínima para el codificador.
+     * 
+     * Esta función establece el valor mínimo de posición que puede tener el codificador.
+     * Se utiliza para definir el límite inferior del rango del codificador.
+     * 
+     * @param minPos El valor de la posición mínima a establecer.
+     */
     void setMinPosition(int minPos);
 
+    /**
+     * @brief Verifica si el codificador se ha movido.
+     * 
+     * Esta función devuelve un valor booleano que indica si el codificador
+     * ha detectado algún movimiento desde la última verificación.
+     * 
+     * @return true si el codificador se ha movido, false en caso contrario.
+     */
     bool moved();
-    bool movedLeft();
-    bool movedRight();
 
 private:
 
     /**
-     * @brief Interrupt handler for the encoder.
+     * @brief Manejador de interrupciones para el codificador.
      * 
-     * This function is marked with IRAM_ATTR to ensure it is placed in the 
-     * Internal RAM (IRAM) for faster execution. This is particularly important 
-     * for interrupt service routines (ISRs) to minimize latency.
+     * Esta función está marcada con IRAM_ATTR para asegurar que se coloque en la
+     * RAM interna (IRAM) para una ejecución más rápida. Esto es particularmente importante
+     * para las rutinas de servicio de interrupciones (ISR) para minimizar la latencia.
      */
     static void IRAM_ATTR handleInterrupt();
 
     /**
-     * @brief Interrupt Service Routine (ISR) for handling button interrupts.
+     * @brief Rutina de Servicio de Interrupción (ISR) para manejar interrupciones de botones.
      * 
-     * This function is marked with IRAM_ATTR to ensure it is placed in the 
-     * IRAM (Instruction RAM) for faster execution. It is intended to be 
-     * called when a button interrupt occurs, allowing for quick and 
-     * efficient handling of the button press event.
+     * Esta función está marcada con IRAM_ATTR para asegurar que se coloque en la
+     * IRAM (RAM de Instrucción) para una ejecución más rápida. Está destinada a ser
+     * llamada cuando ocurre una interrupción de botón, permitiendo un manejo rápido y
+     * eficiente del evento de pulsación del botón.
      */
     static void IRAM_ATTR handleButtonInterrupt();
 
-    static Encoder* instance;       // Global instance pointer
-    volatile int lastState;         // State of the CLK pin
-    volatile int position;          // Encoder position (marked volatile)
-    volatile bool buttonPressed;    // Button press status (marked volatile)
-    int encoderMaxPosition;         // Maximum position value for the encoder
-    int encoderMinPosition;         // Minimum position value for the encoder
+    static Encoder* instance;       // Puntero de instancia global
+    volatile int lastState;         // Estado del pin CLK
+    volatile int position;          // Posición del codificador (marcado como volatile)
+    volatile bool buttonPressed;    // Estado de pulsación del botón (marcado como volatile)
+    int encoderMaxPosition;         // Valor máximo de posición para el codificador
+    int encoderMinPosition;         // Valor mínimo de posición para el codificador
 };

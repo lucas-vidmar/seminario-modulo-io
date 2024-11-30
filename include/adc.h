@@ -1,15 +1,12 @@
 /**
  * @file adc.h
- * @brief Header file for the ADC class.
+ * @brief Archivo de encabezado para la clase ADC.
  * 
- * This file contains the declaration of the ADC class, which provides methods
- * to interface with an Analog-to-Digital Converter (ADC) module. The class
- * allows for initialization of the ADC, and reading current, temperature, and
- * voltage values from the Device Under Test (DUT) using I2C communication.
+ * Este archivo contiene la declaración de la clase ADC, que proporciona métodos
+ * para interactuar con un módulo Convertidor Analógico a Digital (ADC)
  * 
- * @note This class requires an I2C instance for communication.
+ * @note Esta clase requiere una instancia de I2C para la comunicación.
  * 
- * @date 2024-11-01
  */
 #pragma once
 
@@ -27,59 +24,57 @@
 
 /**
  * @class ADC
- * @brief A class to interface with an Analog-to-Digital Converter (ADC) module.
+ * @brief Una clase para interactuar con un módulo Convertidor Analógico a Digital (ADC).
  * 
- * The ADC class provides methods to initialize the ADC module, read current,
- * temperature, and voltage values from the Device Under Test (DUT). It uses
- * I2C communication to interact with the ADC hardware.
+ * La clase ADC proporciona métodos para inicializar el módulo ADC.
  * 
- * @note This class requires an I2C instance for communication.
+ * @note Esta clase requiere una instancia de I2C para la comunicación.
  */
 class ADC {
 public:
     /**
-     * @brief Constructor for the ADC class.
+     * @brief Constructor para la clase ADC.
      * 
-     * Initializes the ADC (Analog-to-Digital Converter) module.
+     * Inicializa el módulo Convertidor Analógico a Digital (ADC).
      */
     ADC();
 
     /**
-     * @brief Initializes the ADC with the given I2C pointer.
+     * @brief Inicializa el ADC con el puntero I2C dado.
      * 
-     * This function sets up the ADC (Analog-to-Digital Converter) using the provided
-     * I2C pointer. It configures the necessary settings to enable communication
-     * with the ADC over the I2C bus.
+     * Esta función configura el Convertidor Analógico a Digital (ADC) utilizando el puntero
+     * I2C proporcionado. Configura los ajustes necesarios para habilitar la comunicación
+     * con el ADC a través del bus I2C.
      * 
-     * @param i2c_pointer A pointer to an I2C instance used for communication with the ADC.
+     * @param i2c_pointer Un puntero a una instancia de I2C utilizada para la comunicación con el ADC.
      */
     void init(I2C* i2c_pointer);
 
     /**
-     * @brief Reads the voltage from the specified ADC channel.
+     * @brief Lee el voltaje del canal ADC especificado.
      * 
-     * This function reads the analog voltage from the given ADC channel and 
-     * returns the corresponding voltage value as a float.
+     * Esta función lee el voltaje analógico del canal ADC dado y 
+     * devuelve el valor de voltaje correspondiente como un flotante.
      * 
-     * @param channel The ADC channel to read from (0-255).
-     * @return float The voltage read from the specified ADC channel.
+     * @param channel El canal ADC del cual leer (0-255).
+     * @return float El voltaje leído del canal ADC especificado.
      */
     float read_voltage(uint8_t channel);
 
 private:
     /**
-     * @brief Pointer to an I2C instance used for communication.
+     * @brief Puntero a una instancia de I2C utilizada para la comunicación.
      */
     I2C* i2c;
 
     /**
-     * @brief Reads the ADC value from the specified channel.
+     * @brief Lee el valor del ADC del canal especificado.
      * 
-     * This function reads the analog-to-digital converter (ADC) value from the 
-     * specified channel and stores the result in the provided value pointer.
+     * Esta función lee el valor del convertidor analógico a digital (ADC) del 
+     * canal especificado y almacena el resultado en el puntero de valor proporcionado.
      * 
-     * @param channel The ADC channel to read from.
-     * @param value Pointer to an int16_t variable where the read value will be stored.
+     * @param channel El canal ADC del cual leer.
+     * @param value Puntero a una variable int16_t donde se almacenará el valor leído.
      */
     void read(uint8_t channel, int16_t* value);
 };

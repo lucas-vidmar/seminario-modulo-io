@@ -1,18 +1,15 @@
-
 /**
  * @file dac.h
- * @brief Header file for the DAC class.
+ * @brief Archivo de encabezado para la clase DAC.
  * 
- * This file contains the definition of the DAC class, which provides methods
- * to initialize and control a Digital-to-Analog Converter (DAC) over an I2C bus.
- * It includes functions to set the output voltage and write digital values to the DAC.
+ * Este archivo contiene la definición de la clase DAC, que proporciona métodos
+ * para inicializar y controlar un Convertidor Digital a Analógico (DAC) a través de un bus I2C.
+ * Incluye funciones para establecer el voltaje de salida y escribir valores digitales en el DAC.
  * 
- * The DAC class requires an I2C instance for communication.
+ * La clase DAC requiere una instancia de I2C para la comunicación.
  * 
- * @note The DAC resolution is 12 bits, with a reference voltage of 4.096V.
- * The maximum output voltage is 0.5V, and the maximum digital value is 83.
+ * @note La resolución del DAC es de 12 bits, con un voltaje de referencia de 5V.
  * 
- * @date 2024-11-01
  */
 #pragma once
 
@@ -21,67 +18,76 @@
 
 #include "i2c.h"
 
-#define MCP4725_ADDR 0x60   /*!< MCP4725 I2C address */
+#define MCP4725_ADDR 0x60   /*!< Dirección I2C del MCP4725 */
 
-#define DAC_BITS 12 /*!< DAC resolution in bits */
-#define DAC_RESOLUTION (1 << DAC_BITS) /*!< DAC resolution in bits */
-#define DAC_REF_VOLTAGE 5   /*!< Reference voltage in volts */
-#define DAC_Q (DAC_REF_VOLTAGE / DAC_RESOLUTION)    /*!< Voltage step in V */
-#define DAC_QmV (DAC_Q * 1000)  /*!< Voltage step in mV */
-#define DAC_V_MAX 5   /*!< Maximum voltage output in V */
-#define DAC_OUTPUT_VOLTAGE_DIVIDER (DAC_V_MAX / DAC_REF_VOLTAGE)    /*!< Output voltage divider */
-#define DAC_MAX_DIGITAL_VALUE (DAC_RESOLUTION - 1) /*!< Maximum digital value */
+#define DAC_BITS 12 /*!< Resolución del DAC en bits */
+#define DAC_RESOLUTION (1 << DAC_BITS) /*!< Resolución del DAC en bits */
+#define DAC_REF_VOLTAGE 5   /*!< Voltaje de referencia en voltios */
+#define DAC_Q (DAC_REF_VOLTAGE / DAC_RESOLUTION)    /*!< Paso de voltaje en V */
+#define DAC_QmV (DAC_Q * 1000)  /*!< Paso de voltaje en mV */
+#define DAC_V_MAX 5   /*!< Voltaje máximo de salida en V */
+#define DAC_OUTPUT_VOLTAGE_DIVIDER (DAC_V_MAX / DAC_REF_VOLTAGE)    /*!< Divisor de voltaje de salida */
+#define DAC_MAX_DIGITAL_VALUE (DAC_RESOLUTION - 1) /*!< Valor digital máximo */
 
 /**
  * @class DAC
- * @brief A class to represent a Digital-to-Analog Converter (DAC).
+ * @brief Una clase para representar un Convertidor Digital a Analógico (DAC).
  * 
- * The DAC class provides methods to initialize and control a DAC device
- * over an I2C bus. It allows setting the output voltage and writing digital
- * values to the DAC.
+ * La clase DAC proporciona métodos para inicializar y controlar un dispositivo DAC
+ * a través de un bus I2C. Permite establecer el voltaje de salida y escribir valores digitales
+ * en el DAC.
  * 
- * @note This class requires an I2C instance for communication.
+ * @note Esta clase requiere una instancia de I2C para la comunicación.
  */
 class DAC {
 public:
     /**
-     * @brief Construct a new DAC object.
+     * @brief Construye un nuevo objeto DAC.
      * 
-     * This constructor initializes a new instance of the DAC class.
+     * Este constructor inicializa una nueva instancia de la clase DAC.
      */
     DAC();
 
     /**
-     * @brief Initializes the DAC with the given I2C pointer.
+     * @brief Inicializa el DAC con el puntero I2C dado.
      * 
-     * This function sets up the DAC (Digital-to-Analog Converter) using the provided
-     * I2C pointer. It configures the necessary settings to enable communication
-     * with the DAC over the I2C bus.
+     * Esta función configura el DAC (Convertidor Digital a Analógico) utilizando el puntero
+     * I2C proporcionado. Configura los ajustes necesarios para habilitar la comunicación
+     * con el DAC a través del bus I2C.
      * 
-     * @param i2c_pointer A pointer to an I2C instance used for communication with the DAC.
+     * @param i2c_pointer Un puntero a una instancia de I2C utilizada para la comunicación con el DAC.
      */
     void init(I2C* i2c_pointer);
 
     /**
-     * @brief Sets the output voltage of the DAC.
+     * @brief Establece el voltaje de salida del DAC.
      * 
-     * This function sets the output voltage of the DAC (Digital-to-Analog Converter)
-     * to the specified value in millivolts (mV).
+     * Esta función establece el voltaje de salida del DAC (Convertidor Digital a Analógico)
+     * al valor especificado en milivoltios (mV).
      * 
-     * @param voltageInMmV The desired output voltage in millivolts (mV).
+     * @param voltageInMmV El voltaje de salida deseado en milivoltios (mV).
      */
     void set_voltage(int voltageInMmV);
 
     /**
-     * @brief Writes a digital value to the DAC.
+     * @brief Escribe un valor digital en el DAC.
      * 
-     * This function sets the DAC output to the specified digital value.
+     * Esta función establece la salida del DAC al valor digital especificado.
      * 
-     * @param value The digital value to write to the DAC. This should be a 
-     *              16-bit unsigned integer representing the desired output level.
+     * @param value El valor digital a escribir en el DAC. Este debe ser un 
+     *              entero sin signo de 16 bits que representa el nivel de salida deseado.
      */
     void digitalWrite(uint16_t value);
 
+    /**
+     * @brief Lee el voltaje actual del DAC.
+     * 
+     * Esta función lee el nivel de voltaje actual del Convertidor Digital a Analógico (DAC)
+     * y lo devuelve como un valor entero. La unidad específica y el rango del valor devuelto
+     * dependen de la configuración y resolución del DAC.
+     * 
+     * @return int El nivel de voltaje actual leído del DAC.
+     */
     int readVoltage();
 
 private:

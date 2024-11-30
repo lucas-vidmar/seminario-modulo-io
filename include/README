@@ -1,39 +1,28 @@
+# Header Files Documentation
 
-This directory is intended for project header files.
+## main.h
+This file contains the main declarations for the project, including function declarations for HTML handlers, menu printing, FSM logic, and GPIO control.
 
-A header file is a file containing C declarations and macro definitions
-to be shared between several project source files. You request the use of a
-header file in your project source file (C, C++, etc) located in `src` folder
-by including it, with the C preprocessing directive `#include'.
+## led.h
+This file contains the declaration of the `BuiltInLed` class, which provides methods to control the built-in LED on a microcontroller.
 
-```src/main.c
+## lcdsim.h
+This file contains the declaration of the `SimulatedLCD` class, which simulates an LCD screen for testing purposes.
 
-#include "header.h"
+## i2c.h
+This file contains the declaration of the `I2C` class, which provides methods for initializing the I2C interface and performing read and write operations on the I2C bus.
 
-int main (void)
-{
- ...
-}
-```
+## gpio.h
+This file contains the declaration of the `GPIO` class and its derived classes `DigitalGPIO` and `AnalogGPIO`, which provide methods for configuring, reading, and writing to GPIO pins.
 
-Including a header file produces the same results as copying the header file
-into each source file that needs it. Such copying would be time-consuming
-and error-prone. With a header file, the related declarations appear
-in only one place. If they need to be changed, they can be changed in one
-place, and programs that include the header file will automatically use the
-new version when next recompiled. The header file eliminates the labor of
-finding and changing all the copies as well as the risk that a failure to
-find one copy will result in inconsistencies within a program.
+## encodersim.h
+This file contains the declaration of the `SimulatedEncoder` class, which simulates an encoder for testing purposes.
 
-In C, the usual convention is to give header files names that end with `.h'.
-It is most portable to use only letters, digits, dashes, and underscores in
-header file names, and at most one dot.
+## encoder.h
+This file contains the declaration of the `Encoder` class, which provides methods for interacting with a rotary encoder.
 
-Read more about using header files in official GCC documentation:
+## dac.h
+This file contains the declaration of the `DAC` class, which provides methods for initializing and controlling a Digital-to-Analog Converter (DAC) via I2C.
 
-* Include Syntax
-* Include Operation
-* Once-Only Headers
-* Computed Includes
-
-https://gcc.gnu.org/onlinedocs/cpp/Header-Files.html
+## adc.h
+This file contains the declaration of the `ADC` class, which provides methods for interacting with an Analog-to-Digital Converter (ADC) via I2C.
