@@ -1,7 +1,5 @@
 #include "main.h"
 
-int encoder_last_position = -1;
-
 /* ------- Perisfericos ------- */
 BuiltInLed led = BuiltInLed();
 I2C i2c = I2C();
@@ -103,13 +101,13 @@ void setup() {
   lcd.init();
   lcd.backlight();
   lcd.clear();
-  print_line(0, "--Conectar al AP--");
-  print_line(1, "IP: " + WiFi.softAPIP().toString());
-  print_line(2, String("SSID: ") + ssid);
-  print_line(3, String("Password: ") + password);
-
-  //delay(5000); // Esperar 5 segundos para que el usuario pueda ver la información
-
+  String ops[] = {"IP: " + WiFi.softAPIP().toString(), "SSID: " + ssid, "Password: " + password, "Continuar"};
+  while (!(encoder.isButtonPressed() && encoder.getPosition() == 3)) { // Esperar a que el usuario presione el botón y seleccione "Continuar"
+    if (encoder.moved()) {
+      print_menu(ops, 4, "Información AP");
+    }
+    encoder.update();
+  }
   encoder.setPosition(0);
 }
 
@@ -118,7 +116,7 @@ void loop(){
   encoder.update();
   #endif
 
-  //fsm();
+  fsm();
 }
 
 void HTMLHandlers() {
@@ -144,7 +142,6 @@ void HTMLHandlers() {
   // Leer entradas analógicas
   webServer.on("/readAI1", HTTP_GET, [](AsyncWebServerRequest *request){
     float value = analogRead(AI1)*3.3/4095;
-    Serial.println(value);
     request->send(200, "text/plain", String(value,2));
   });
 
@@ -250,39 +247,32 @@ void fsm() {
   switch (state) {
     case MAIN_MENU:
       // Manejar el menú principal
-      if (encoder_last_position != encoder.getPosition()) {
+      if (encoder.moved()) {
         String menuOptions[] = {"Mediciones", "Control", "Configuración"};
         print_menu(menuOptions, 3, "Menú principal");
-        encoder_last_position = encoder.getPosition();
       }
       if (encoder.isButtonPressed()) {
         state = MenuState(encoder.getPosition() + 1);
-        encoder_last_position = -1;
         encoder.setPosition(0);
       }
       break;
     case MEASUREMENTS:
       // Manejar las mediciones
-      print_measurments();
-      if (encoder.isButtonPressed()) {
-        if (encoder.getPosition() == 9) {
-          state = MAIN_MENU;
-          encoder_last_position = -1;
-          encoder.setPosition(0);
-        }
+      static int time = millis();
+      if (encoder.moved() || millis() - time > 1000) { // Imprimir medidas si el encoder se mueve o ha pasado 1s
+        time = millis();
+        print_measurments();
       }
-      delay(1000); // Actualizar cada segundo
+      if (encoder.isButtonPressed() && encoder.getPosition() == 9) {
+        state = MAIN_MENU;
+        encoder.setPosition(0);
+      }
       break;
     case CONTROL_MENU:
       // Manejar el menu de control
-      static bool control_menu = true;
-      if (encoder_last_position != encoder.getPosition()) {
-        print_control(encoder.getPosition());
-        encoder_last_position = encoder.getPosition();
-      }
+      if (encoder.moved()) print_control(encoder.getPosition());
       if (encoder.isButtonPressed()) {
         state = (encoder.getPosition() == CONTROL_EXIT) ? MAIN_MENU : CONTROL; // Salir del menu de control o ir a control
-        encoder_last_position = -1;
         control_state = ControlState(encoder.getPosition());
         encoder.setPosition(0);
       }
@@ -291,10 +281,7 @@ void fsm() {
       // Manejar el control
       switch (control_state) {
         case CONTROL_DO1:
-          if (encoder_last_position != encoder.getPosition()) {
-            control_digital(do1, "DO1");
-            encoder_last_position = encoder.getPosition();
-          }
+          if (encoder.moved()) control_digital(do1, "DO1");
           if (encoder.isButtonPressed()) {
             if (encoder.getPosition() == 0) {
               do1.toggle();
@@ -302,16 +289,12 @@ void fsm() {
             }
             else {
               state = CONTROL_MENU;
-              encoder_last_position = -1;
               encoder.setPosition(0);
             }
           }
           break;
         case CONTROL_DO2:
-          if (encoder_last_position != encoder.getPosition()) {
-            control_digital(do2, "DO2");
-            encoder_last_position = encoder.getPosition();
-          }
+          if (encoder.moved()) control_digital(do2, "DO2");
           if (encoder.isButtonPressed()) {
             if (encoder.getPosition() == 0) {
               do2.toggle();
@@ -319,16 +302,12 @@ void fsm() {
             }
             else {
               state = CONTROL_MENU;
-              encoder_last_position = -1;
               encoder.setPosition(0);
             }
           }
           break;
         case CONTROL_DO3:
-          if (encoder_last_position != encoder.getPosition()) {
-            control_digital(do3, "DO3");
-            encoder_last_position = encoder.getPosition();
-          }
+          if (encoder.moved()) control_digital(do3, "DO3");
           if (encoder.isButtonPressed()) {
             if (encoder.getPosition() == 0) {
               do3.toggle();
@@ -336,7 +315,6 @@ void fsm() {
             }
             else {
               state = CONTROL_MENU;
-              encoder_last_position = -1;
               encoder.setPosition(0);
             }
           }
@@ -345,7 +323,6 @@ void fsm() {
           break;
         case CONTROL_EXIT:
           state = CONTROL_MENU;
-          encoder_last_position = -1;
           encoder.setPosition(0);
           break;
       }
@@ -354,7 +331,6 @@ void fsm() {
       // Manejar la configuración
       if (encoder.isButtonPressed()) {
         state = MAIN_MENU;
-        encoder_last_position = -1;
       }
       break;
   }
@@ -420,11 +396,5 @@ void print_control(int selected){
 void control_digital(DigitalGPIO d, String pinName){
   String status = d.read() == HIGH ? "OFF" : "ON";
   String options[] = {status, "Volver"};
-  print_menu(options, 2, pinName);
-}
-
-void control_analog(AnalogGPIO a, String pinName){
-  String current_value = "Valor: " + String(a.read());
-  String options[] = {current_value, "Volver"};
   print_menu(options, 2, pinName);
 }

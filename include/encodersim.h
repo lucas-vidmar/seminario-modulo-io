@@ -25,6 +25,8 @@ public:
     void setMaxPosition(int maxPos);
     void setMinPosition(int minPos);
 
+    bool moved();
+
 private:
     int position;
     bool buttonPressed;

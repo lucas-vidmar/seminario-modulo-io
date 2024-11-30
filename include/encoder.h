@@ -79,6 +79,8 @@ public:
 
     void setMinPosition(int minPos);
 
+    bool moved();
+
 private:
 
     /**
