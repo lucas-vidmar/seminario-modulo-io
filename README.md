@@ -46,11 +46,11 @@ Este proyecto consiste en un módulo de entrada/salida (I/O) para entornos educa
 | VP    | 36   | I            | DI               | DI    |
 
 
-### Esquemático
+### [Esquemático](kicad/Modulo%20IO%20Seminario.kicad_sch)
 
 ![Esquemático](doc/esquematico.png)
 
-### PCB
+### [PCB](kicad/Modulo%20IO%20Seminario.kicad_pcb)
 
 ![PCB Back](doc/pcb_back.jpg)
 ![PCB Front](doc/pcb_front.jpg)
