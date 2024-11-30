@@ -80,6 +80,24 @@ void Encoder::setMinPosition(int minPos) {
     if (position < encoderMinPosition) setPosition(encoderMinPosition);
 }
 
+bool Encoder::movedLeft(){
+    static int last_position = 0;
+    if (last_position > position) {
+        last_position = position;
+        return true;
+    }
+    return false;
+}
+
+bool Encoder::movedRight(){
+    static int last_position = 0;
+    if (last_position < position) {
+        last_position = position;
+        return true;
+    }
+    return false;
+}
+
 bool Encoder::moved(){
     static int last_position = 0;
     if (last_position != position) {

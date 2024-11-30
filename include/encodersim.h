@@ -26,6 +26,8 @@ public:
     void setMinPosition(int minPos);
 
     bool moved();
+    bool movedLeft();
+    bool movedRight();
 
 private:
     int position;

@@ -27,7 +27,7 @@
 #define DAC_RESOLUTION (1 << DAC_BITS) /*!< DAC resolution in bits */
 #define DAC_REF_VOLTAGE 5   /*!< Reference voltage in volts */
 #define DAC_Q (DAC_REF_VOLTAGE / DAC_RESOLUTION)    /*!< Voltage step in V */
-#define DAC_QmV (Q * 1000)  /*!< Voltage step in mV */
+#define DAC_QmV (DAC_Q * 1000)  /*!< Voltage step in mV */
 #define DAC_V_MAX 5   /*!< Maximum voltage output in V */
 #define DAC_OUTPUT_VOLTAGE_DIVIDER (DAC_V_MAX / DAC_REF_VOLTAGE)    /*!< Output voltage divider */
 #define DAC_MAX_DIGITAL_VALUE (DAC_RESOLUTION - 1) /*!< Maximum digital value */
@@ -81,6 +81,8 @@ public:
      *              16-bit unsigned integer representing the desired output level.
      */
     void digitalWrite(uint16_t value);
+
+    int readVoltage();
 
 private:
     I2C* i2c;

@@ -320,6 +320,26 @@ void fsm() {
           }
           break;
         case CONTROL_AO1:
+          encoder.setMaxPosition(5000/100);
+          encoder.setMinPosition(0);
+          static int last_position = 0;
+          while (!encoder.isButtonPressed()) {
+            if (encoder.moved()) {
+              static int val = 0;
+              if (last_position > encoder.getPosition()) {
+                val = max(0, val - 100);
+              } else {
+                val = min(5000, val + 100);
+              }
+              last_position = encoder.getPosition();
+              int digitalVal = (int)(val * DAC_MAX_DIGITAL_VALUE / 5000);
+              dac.digitalWrite(digitalVal);
+              control_dac(dac, "AO1");
+            }
+            encoder.update();
+          }
+          state = CONTROL_MENU;
+          encoder.setPosition(0);
           break;
         case CONTROL_EXIT:
           state = CONTROL_MENU;
@@ -397,4 +417,10 @@ void control_digital(DigitalGPIO d, String pinName){
   String status = d.read() == HIGH ? "OFF" : "ON";
   String options[] = {status, "Volver"};
   print_menu(options, 2, pinName);
+}
+
+void control_dac(DAC d, String pinName){
+  print_line(0, "--Control de " + pinName + "--");
+  float vinV = d.readVoltage() / 1000.0;
+  print_line(1, "Valor: " + String(vinV, 2) + "V");
 }

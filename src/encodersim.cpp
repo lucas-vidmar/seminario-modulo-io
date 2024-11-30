@@ -87,7 +87,25 @@ void SimulatedEncoder::setMinPosition(int minPos) {
     }
 }
 
-bool SimulatedEncoder::moved() {
+bool SimulatedEncoder::movedLeft(){
+    static int last_position = 0;
+    if (last_position > position) {
+        last_position = position;
+        return true;
+    }
+    return false;
+}
+
+bool SimulatedEncoder::movedRight(){
+    static int last_position = 0;
+    if (last_position < position) {
+        last_position = position;
+        return true;
+    }
+    return false;
+}
+
+bool SimulatedEncoder::moved(){
     static int last_position = 0;
     if (last_position != position) {
         last_position = position;
