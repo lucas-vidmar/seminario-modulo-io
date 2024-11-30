@@ -35,6 +35,8 @@ DigitalGPIO do3 = DigitalGPIO(DO3, OUTPUT);
 AnalogGPIO ai1 = AnalogGPIO(AI1);
 AnalogGPIO ai2 = AnalogGPIO(AI2);
 //AnalogGPIO ao1 = AnalogGPIO(AO1);
+PWM pwm1 = PWM(PPWM1, PWMFREQ, 0);
+PWM pwm2 = PWM(PPWM2, PWMFREQ, 0);
 
 /* ------- Menu ------- */
 enum MenuState {
@@ -180,6 +182,29 @@ void HTMLHandlers() {
       request->send(200, "text/plain", "AO1* ajustado a " + valueStr);
     } else {
       request->send(400, "text/plain", "Falta el parámetro 'value'");
+    }
+  });
+
+  // Ajustar PWM1
+  webServer.on("/setPWM1", HTTP_GET, [](AsyncWebServerRequest *request){
+    if (request->hasParam("duty")) {
+      String dutyStr = request->getParam("duty")->value();
+      int duty = dutyStr.toInt();
+      pwm1.setDutyCycle(100-duty);
+      request->send(200, "text/plain", "PWM1 ajustado a " + dutyStr);
+    } else {
+      request->send(400, "text/plain", "Faltan parámetro 'duty'");
+    }
+  });
+  // Ajustar PWM2
+  webServer.on("/setPWM2", HTTP_GET, [](AsyncWebServerRequest *request){
+    if (request->hasParam("duty")) {
+      String dutyStr = request->getParam("duty")->value();
+      int duty = dutyStr.toInt();
+      pwm2.setDutyCycle(100-duty);
+      request->send(200, "text/plain", "PWM2 ajustado a " + dutyStr);
+    } else {
+      request->send(400, "text/plain", "Faltan parámetro 'duty'");
     }
   });
 

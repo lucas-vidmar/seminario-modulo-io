@@ -242,6 +242,24 @@
           <span class="slidero round"></span>
         </label>
 
+        <!-- PWM1 -->
+        <div style="text-align: left; margin: 10px; font-weight: bold;">PWM1</div>
+        <div class="slidecontainer">
+          <div style="padding-left: 10px; padding-right: 10px;">0</div>
+          <input type="range" min="0" max="100" value="0" class="slider" id="PWM1">
+          <div style="padding-left: 10px; padding-right: 10px;">100</div>
+        </div>
+        <span id="PWM1Value">0</span>
+
+        <!-- PWM2 -->
+        <div style="text-align: left; margin: 10px; font-weight: bold;">PWM2</div>
+        <div class="slidecontainer">
+          <div style="padding-left: 10px; padding-right: 10px;">0</div>
+          <input type="range" min="0" max="100" value="0" class="slider" id="PWM2">
+          <div style="padding-left: 10px; padding-right: 10px;">100</div>
+        </div>
+        <span id="PWM2Value">0</span>
+
         </div>
     </div>
   </div>
@@ -324,6 +342,27 @@
           console.log('AO1* ajustado a:', value);
         })
         .catch(error => console.error('Error al ajustar AO1*:', error));
+    });
+    // Event listener para el slider de PWMs
+    document.getElementById('PWM1').addEventListener('input', function() {
+      var duty = this.value;
+      document.getElementById('PWM1Value').innerText = duty;
+      fetch('/setPWM1?duty=' + duty)
+        .then(response => response.text())
+        .then(data => {
+          console.log('PWM1 ajustado a:', duty);
+        })
+        .catch(error => console.error('Error al ajustar PWM1:', error));
+    });
+    document.getElementById('PWM2').addEventListener('input', function() {
+      var duty = this.value;
+      document.getElementById('PWM2Value').innerText = duty;
+      fetch('/setPWM2?duty=' + duty)
+        .then(response => response.text())
+        .then(data => {
+          console.log('PWM2 ajustado a:', duty);
+        })
+        .catch(error => console.error('Error al ajustar PWM2:', error));
     });
   
     // Event listeners para las salidas digitales

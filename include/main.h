@@ -12,6 +12,7 @@
 #include "LiquidCrystal_I2C.h"
 #include "lcdsim.h"
 #include "encodersim.h"
+#include "pwm.h"
 
 void HTMLHandlers();
 void print_menu(String options[],int options_size, String title);
@@ -32,3 +33,6 @@ void control_analog(AnalogGPIO a, String pinName);
 #define AI1 GPIO_NUM_34
 #define AI2 GPIO_NUM_35
 //#define AO1 GPIO_NUM_25
+#define PPWM1 GPIO_NUM_4
+#define PPWM2 GPIO_NUM_5
+#define PWMFREQ 50
