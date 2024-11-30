@@ -141,13 +141,14 @@ void HTMLHandlers() {
   });
   // Leer entradas analógicas
   webServer.on("/readAI1", HTTP_GET, [](AsyncWebServerRequest *request){
-    int value = analogRead(AI1);
-    request->send(200, "text/plain", String(value));
+    float value = analogRead(AI1)*3.3/4095;
+    Serial.println(value);
+    request->send(200, "text/plain", String(value,2));
   });
 
   webServer.on("/readAI2", HTTP_GET, [](AsyncWebServerRequest *request){
-    int value = analogRead(AI2);
-    request->send(200, "text/plain", String(value));
+    float value = analogRead(AI2)*3.3/4095;
+    request->send(200, "text/plain", String(value,2));
   });
 
   webServer.on("/readAI1*", HTTP_GET, [](AsyncWebServerRequest *request){
