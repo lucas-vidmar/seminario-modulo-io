@@ -50,6 +50,8 @@ enum ControlState {
   CONTROL_DO2,
   CONTROL_DO3,
   CONTROL_AO1,
+  CONTROL_PWM1,
+  CONTROL_PWM2,
   CONTROL_EXIT
 };
 
@@ -72,7 +74,6 @@ void setup() {
   Serial.println("Inicializando periféricos...");
   i2c.init();
   dac.init(&i2c);
-  dac.digitalWrite(4095);
   adc.init(&i2c);
   encoder.init();
 
@@ -91,6 +92,10 @@ void setup() {
   // Configurar manejadores para rutas
   Serial.println("Configurando manejadores de rutas...");
   HTMLHandlers();
+
+  // Settear PWM a 0
+  pwm1.setDutyCycle(0);
+  pwm2.setDutyCycle(0);
   
   // Iniciar el servidor web
   Serial.println("Iniciando servidor web...");
@@ -112,10 +117,7 @@ void setup() {
 }
 
 void loop(){
-  #ifndef USE_ENCODER
   encoder.update();
-  #endif
-
   fsm();
 }
 
@@ -322,19 +324,38 @@ void fsm() {
         case CONTROL_AO1:
           encoder.setMaxPosition(5000/100);
           encoder.setMinPosition(0);
-          static int last_position = 0;
           while (!encoder.isButtonPressed()) {
             if (encoder.moved()) {
-              static int val = 0;
-              if (last_position > encoder.getPosition()) {
-                val = max(0, val - 100);
-              } else {
-                val = min(5000, val + 100);
-              }
-              last_position = encoder.getPosition();
+              int val = encoder.getPosition() * 100;
               int digitalVal = (int)(val * DAC_MAX_DIGITAL_VALUE / 5000);
               dac.digitalWrite(digitalVal);
               control_dac(dac, "AO1");
+            }
+            encoder.update();
+          }
+          state = CONTROL_MENU;
+          encoder.setPosition(0);
+          break;
+        case CONTROL_PWM1:
+          encoder.setMaxPosition(10);
+          encoder.setMinPosition(0);
+          while (!encoder.isButtonPressed()) {
+            if (encoder.moved()) {
+              pwm1.setDutyCycle(encoder.getPosition() * 10); // Ajustar el ciclo de trabajo de 10 en 10
+              control_pwm(pwm1, "PWM1");
+            }
+            encoder.update();
+          }
+          state = CONTROL_MENU;
+          encoder.setPosition(0);
+          break;
+        case CONTROL_PWM2:
+          encoder.setMaxPosition(10);
+          encoder.setMinPosition(0);
+          while (!encoder.isButtonPressed()) {
+            if (encoder.moved()) {
+              pwm2.setDutyCycle(encoder.getPosition() * 10); // Ajustar el ciclo de trabajo de 10 en 10
+              control_pwm(pwm2, "PWM2");
             }
             encoder.update();
           }
@@ -409,8 +430,8 @@ void print_measurments() {
 }
 
 void print_control(int selected){
-  String controlItems[] = {"DO1", "DO2", "DO3", "AO1", "Volver"};
-  print_menu(controlItems, 5, "Control");
+  String controlItems[] = {"DO1", "DO2", "DO3", "AO1", "PWM1", "PWM2", "Volver"};
+  print_menu(controlItems, 7, "Control");
 }
 
 void control_digital(DigitalGPIO d, String pinName){
@@ -420,7 +441,14 @@ void control_digital(DigitalGPIO d, String pinName){
 }
 
 void control_dac(DAC d, String pinName){
+  lcd.clear();
   print_line(0, "--Control de " + pinName + "--");
   float vinV = d.readVoltage() / 1000.0;
   print_line(1, "Valor: " + String(vinV, 2) + "V");
+}
+
+void control_pwm(PWM p, String pinName){
+  lcd.clear();
+  print_line(0, "--Control de " + pinName + "--");
+  print_line(1, "Duty: " + String(p.getDutyCycle()*100/255) + "%");
 }
