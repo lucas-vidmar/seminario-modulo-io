@@ -428,7 +428,7 @@ void print_line(int line, String text) {
   lcd.setCursor(0, line);
   lcd.print(text.c_str());
   #ifdef USE_LCD
-  Serial.print(text);
+  Serial.println(text);
   #endif
 }
 
