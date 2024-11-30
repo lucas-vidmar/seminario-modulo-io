@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Arduino.h>
+#include "I2CScanner.h"
 
 #include "encoder.h"
 #include "led.h"
@@ -38,3 +39,5 @@ void control_pwm(PWM p, String pinName);
 #define PPWM1 GPIO_NUM_4
 #define PPWM2 GPIO_NUM_5
 #define PWMFREQ 50
+
+#define USE_LCD

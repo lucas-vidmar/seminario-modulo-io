@@ -6,7 +6,7 @@ I2C i2c = I2C();
 DAC dac = DAC();
 ADC adc = ADC();
 #ifdef USE_LCD
-LiquidCrystal_I2C lcd(0x3F, 20, 4);  // Crear el objeto lcd con dirección 0x3F y 20 columnas x 4 filas
+LiquidCrystal_I2C lcd(0x27, 20, 4);  // Crear el objeto lcd con dirección 0x3F y 20 columnas x 4 filas
 #else
 SimulatedLCD lcd = SimulatedLCD();
 #endif
@@ -36,6 +36,8 @@ AnalogGPIO ai2 = AnalogGPIO(AI2);
 PWM pwm1 = PWM(PPWM1, PWMFREQ, 0);
 PWM pwm2 = PWM(PPWM2, PWMFREQ, 0);
 
+I2CScanner scanner;
+
 /* ------- Menu ------- */
 enum MenuState {
   MAIN_MENU,
@@ -58,6 +60,10 @@ enum ControlState {
 void setup() {
 
   Serial.begin(115200);
+
+  // I2C Scanner
+  scanner.Init();
+  scanner.Scan();
 
   // Inicializaciones
   led.init();
@@ -109,7 +115,7 @@ void setup() {
   String ops[] = {"IP: " + WiFi.softAPIP().toString(), "SSID: " + ssid, "Password: " + password, "Continuar"};
   while (!(encoder.isButtonPressed() && encoder.getPosition() == 3)) { // Esperar a que el usuario presione el botón y seleccione "Continuar"
     if (encoder.moved()) {
-      print_menu(ops, 4, "Información AP");
+      print_menu(ops, 4, "Informacion AP");
     }
     encoder.update();
   }
@@ -250,7 +256,7 @@ void fsm() {
     case MAIN_MENU:
       // Manejar el menú principal
       if (encoder.moved()) {
-        String menuOptions[] = {"Mediciones", "Control", "Configuración"};
+        String menuOptions[] = {"Mediciones", "Control", "Configuracion"};
         print_menu(menuOptions, 3, "Menú principal");
       }
       if (encoder.isButtonPressed()) {
