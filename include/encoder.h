@@ -82,6 +82,7 @@ public:
     bool moved();
     bool movedLeft();
     bool movedRight();
+    void update();
 
 private:
 

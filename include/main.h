@@ -42,3 +42,4 @@ bool printOneTime();
 #define PWMFREQ 50
 
 #define USE_LCD
+#define USE_ENCODER
