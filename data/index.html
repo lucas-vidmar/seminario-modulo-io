@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Modulo IO</title>
+  <title>Módulo IO</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body {
@@ -53,7 +53,7 @@
     }
 
     .slidecontainer {
-      width: 100%; /* Width of the outside container */
+      width: 100%; /* Ancho del contenedor exterior */
       display: flex;
       flex-flow: row;
       justify-content: center;
@@ -65,25 +65,25 @@
       padding-right: 10px;
     }
 
-    /* The slider itself */
+    /* El slider en sí */
     .slider {
-      -webkit-appearance: none;  /* Override default CSS styles */
+      -webkit-appearance: none;  /* Anular estilos CSS predeterminados */
       appearance: none;
-      width: 100%; /* Full-width */
-      height: 10px; /* Specified height */
-      background: #d3d3d3; /* Grey background */
-      outline: none; /* Remove outline */
-      opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
-      -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+      width: 100%; /* Ancho completo */
+      height: 10px; /* Altura especificada */
+      background: #d3d3d3; /* Fondo gris */
+      outline: none; /* Eliminar contorno */
+      opacity: 0.7; /* Establecer transparencia (para efectos de mouse-over en hover) */
+      -webkit-transition: .2s; /* Transición de 0.2 segundos en hover */
       transition: opacity .2s;
     }
 
-    /* Mouse-over effects */
+    /* Efectos de mouse-over */
     .slider:hover {
-      opacity: 1; /* Fully shown on mouse-over */
+      opacity: 1; /* Mostrar completamente en mouse-over */
     }
 
-    /* The switch - the box around the slidero */
+    /* El switch - la caja alrededor del slidero */
     .switch {
       position: relative;
       display: block;
@@ -92,14 +92,14 @@
       height: 34px;
     }
 
-    /* Hide default HTML checkbox */
+    /* Ocultar checkbox HTML predeterminado */
     .switch input {
       opacity: 0;
       width: 0;
       height: 0;
     }
 
-    /* The slidero */
+    /* El slidero */
     .slidero {
       position: absolute;
       cursor: pointer;
@@ -138,7 +138,7 @@
       transform: translateX(26px);
     }
 
-    /* Rounded slideros */
+    /* Slideros redondeados */
     .slidero.round {
       border-radius: 34px;
     }
@@ -150,11 +150,11 @@
   </style>
 </head>
 <body>
-  <h1>Modulo IO</h1>
+  <h1>Módulo IO</h1>
   <h2>Seminario | Bergmann - Boiero - Vidmar</h2>
   <div style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center;">
     
-    <!-- Inputs -->
+    <!-- Entradas -->
     <div class="flex-child">
       <h3>Entradas</h3>
       <div style="padding: 10px;">
@@ -204,7 +204,7 @@
       </div>
     </div>
     
-    <!-- Outputs -->
+    <!-- Salidas -->
     <div class="flex-child">
       <h3>Salidas</h3>
       
@@ -264,7 +264,7 @@
     </div>
   </div>
 
-  <!-- Functions -->
+  <!-- Funciones -->
   <script>
     // Función para actualizar las entradas digitales
     function updateDigitalInputs() {

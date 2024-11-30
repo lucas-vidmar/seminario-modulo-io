@@ -1,59 +1,62 @@
 #include "adc.h"
 
+// Constructor: Inicializa el objeto ADC con un puntero I2C nulo
 ADC::ADC() : i2c(nullptr) {}
 
+// Inicializa el ADC con el puntero I2C dado
 void ADC::init(I2C* i2c_pointer) {
     i2c = i2c_pointer;
 }
 
+// Lee el valor del ADC del canal especificado y lo almacena en el puntero de valor proporcionado
 void ADC::read(uint8_t channel, int16_t* value) {
-
-    // Validate the channel (0 to 3)
+    // Valida el canal (0 a 3)
     if (channel > 3) return;
 
-    // Configure MUX[14:12] for the selected channel in single-ended mode
-    uint8_t mux = 0x04 + channel; // MUX[14:12] = 100 + channel
+    // Configura MUX[14:12] para el canal seleccionado en modo de entrada única
+    uint8_t mux = 0x04 + channel; // MUX[14:12] = 100 + canal
 
-    // Configure the configuration register
+    // Configura el registro de configuración
     uint16_t config = 0;
-    config |= (1 << 15);      // OS = 1 (Start a single conversion)
-    config |= (mux << 12);    // MUX[14:12]: Selected channel with respect to GND
+    config |= (1 << 15);      // OS = 1 (Iniciar una conversión única)
+    config |= (mux << 12);    // MUX[14:12]: Canal seleccionado con respecto a GND
     config |= (0 << 9);       // PGA[11:9] = 000 (±6.144V)
-    config |= (1 << 8);       // MODE = 1 (Single conversion mode)
+    config |= (1 << 8);       // MODE = 1 (Modo de conversión única)
     config |= (4 << 5);       // DR[7:5] = 100 (128 SPS)
-    config |= (0x03);         // COMP_QUE[1:0] = 11 (Disable the comparator)
+    config |= (0x03);         // COMP_QUE[1:0] = 11 (Desactivar el comparador)
 
-    // Write to the configuration register
+    // Escribe en el registro de configuración
     uint8_t data[3];
-    data[0] = 0x01;                   // Configuration register address
+    data[0] = 0x01;                   // Dirección del registro de configuración
     data[1] = (config >> 8) & 0xFF;   // MSB
     data[2] = config & 0xFF;          // LSB
     i2c->write(ADS1115_ADDR, data, 3);
 
-    // Wait for the conversion to complete (according to the selected data rate)
-    delay(ADC_CONVERSION_TIME * 3); // 8ms for 128 SPS
+    // Espera a que la conversión se complete (según la tasa de datos seleccionada)
+    delay(ADC_CONVERSION_TIME * 3); // 8ms para 128 SPS
 
-    // Read the conversion register
-    data[0] = 0x00; // Conversion register address
+    // Lee el registro de conversión
+    data[0] = 0x00; // Dirección del registro de conversión
     i2c->write(ADS1115_ADDR, data, 1);
     i2c->read(ADS1115_ADDR, data, 2);
 
-    // Combine the MSB and LSB to get the 16-bit value
+    // Combina el MSB y el LSB para obtener el valor de 16 bits
     int16_t raw_adc = (data[0] << 8) | data[1];
 
-    // Ensure the value is positive
+    // Asegura que el valor sea positivo
     if (raw_adc < 0) {
         raw_adc = 0;
     }
 
-    // Return the ADC value
+    // Devuelve el valor del ADC
     *value = raw_adc;
 }
 
+// Lee el valor del ADC del canal especificado y lo convierte a voltaje
 float ADC::read_voltage(uint8_t channel) {
     int16_t v = 0;
     read(channel, &v);
 
-    // Convert the ADC value to a voltage
+    // Convierte el valor del ADC a voltaje
     return 2 * ADC_PGA * ((float)v) / ((float)ADC_MAX_VALUE); // V = 2 * PGA * ADC / 2^16
 }

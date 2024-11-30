@@ -3,6 +3,7 @@
 SimulatedEncoder::SimulatedEncoder()
     : position(0), buttonPressed(false), encoderMaxPosition(10), encoderMinPosition(1) { }
 
+// Inicializa el encoder simulado e imprime los comandos disponibles
 void SimulatedEncoder::init() {
     Serial.println("SimulatedEncoder inicializado.");
     Serial.println("Comandos:");
@@ -11,15 +12,16 @@ void SimulatedEncoder::init() {
     Serial.print("  '"); Serial.print(SIMENCODER_PRESS); Serial.println("' - Pulsar el botón");
 }
 
+// Actualiza el estado del encoder basado en la entrada serial
 void SimulatedEncoder::update() {
     static unsigned long last_time = 0;
     // Procesar la entrada serial sin bloquear
     while (Serial.available() > 0) {
-        // Debounce
+        // Antirrebote
         if (millis() - last_time < SIMENCODER_DEBOUNCE) {
-            // Ignorar entrada actual por debounce
+            // Ignorar la entrada actual debido al antirrebote
             Serial.read(); // Descartar el carácter actual
-            continue; // Seguir con el siguiente carácter
+            continue; // Continuar con el siguiente carácter
         }
 
         last_time = millis(); // Actualizar el tiempo de la última entrada
@@ -47,12 +49,14 @@ void SimulatedEncoder::update() {
     }
 }
 
+// Verifica si el botón fue presionado
 bool SimulatedEncoder::isButtonPressed() {
     bool wasPressed = buttonPressed;
-    buttonPressed = false;  // Reset después de leer
+    buttonPressed = false;  // Reiniciar después de leer
     return wasPressed;
 }
 
+// Obtiene la posición actual del encoder
 int SimulatedEncoder::getPosition() {
     // Asegurarse de que la posición esté dentro de los límites
     if (position > encoderMaxPosition) {
@@ -63,6 +67,7 @@ int SimulatedEncoder::getPosition() {
     return position;
 }
 
+// Establece la posición del encoder
 void SimulatedEncoder::setPosition(int pos) {
     position = pos;
     // Asegurarse de que la posición esté dentro de los límites
@@ -73,6 +78,7 @@ void SimulatedEncoder::setPosition(int pos) {
     }
 }
 
+// Establece la posición máxima del encoder
 void SimulatedEncoder::setMaxPosition(int maxPos) {
     encoderMaxPosition = maxPos;
     if (position > encoderMaxPosition) {
@@ -80,6 +86,7 @@ void SimulatedEncoder::setMaxPosition(int maxPos) {
     }
 }
 
+// Establece la posición mínima del encoder
 void SimulatedEncoder::setMinPosition(int minPos) {
     encoderMinPosition = minPos;
     if (position < encoderMinPosition) {
@@ -87,24 +94,7 @@ void SimulatedEncoder::setMinPosition(int minPos) {
     }
 }
 
-bool SimulatedEncoder::movedLeft(){
-    static int last_position = 0;
-    if (last_position > position) {
-        last_position = position;
-        return true;
-    }
-    return false;
-}
-
-bool SimulatedEncoder::movedRight(){
-    static int last_position = 0;
-    if (last_position < position) {
-        last_position = position;
-        return true;
-    }
-    return false;
-}
-
+// Verifica si la posición del encoder ha cambiado
 bool SimulatedEncoder::moved(){
     static int last_position = 0;
     if (last_position != position) {

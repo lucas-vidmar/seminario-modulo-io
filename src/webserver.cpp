@@ -34,9 +34,7 @@ void WebServerESP32::setupWiFi() {
     Serial.println(WiFi.softAPIP());
 }
 
-void WebServerESP32::setupServer() {
-    // Puedes agregar rutas por defecto si lo deseas, o dejar que el usuario las configure
-}
+void WebServerESP32::setupServer() { }
 
 void WebServerESP32::on(const char* uri, WebRequestMethodComposite method, ArRequestHandlerFunction onRequest) {
     _server.on(uri, method, onRequest);
