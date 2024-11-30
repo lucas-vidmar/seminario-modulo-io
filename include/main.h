@@ -25,6 +25,7 @@ void control_digital(DigitalGPIO d, String pinName);
 void control_analog(AnalogGPIO a, String pinName);
 void control_dac(DAC d, String pinName);
 void control_pwm(PWM p, String pinName);
+bool printOneTime();
 
 // Define GPIOs
 #define DI1 GPIO_NUM_26

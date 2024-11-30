@@ -1,6 +1,8 @@
 #include "main.h"
 
-/* ------- Perisfericos ------- */
+bool print = true;
+
+/* ------- Perifericos ------- */
 BuiltInLed led = BuiltInLed();
 I2C i2c = I2C();
 DAC dac = DAC();
@@ -114,7 +116,7 @@ void setup() {
   lcd.clear();
   String ops[] = {"IP: " + WiFi.softAPIP().toString(), "SSID: " + ssid, "Password: " + password, "Continuar"};
   while (!(encoder.isButtonPressed() && encoder.getPosition() == 3)) { // Esperar a que el usuario presione el botón y seleccione "Continuar"
-    if (encoder.moved()) {
+    if (encoder.moved() || printOneTime()) {
       print_menu(ops, 4, "Informacion AP");
     }
     encoder.update();
@@ -255,41 +257,44 @@ void fsm() {
   switch (state) {
     case MAIN_MENU:
       // Manejar el menú principal
-      if (encoder.moved()) {
+      if (encoder.moved() || printOneTime()) {
         String menuOptions[] = {"Mediciones", "Control", "Configuracion"};
-        print_menu(menuOptions, 3, "Menú principal");
+        print_menu(menuOptions, 3, "Menu principal");
       }
       if (encoder.isButtonPressed()) {
         state = MenuState(encoder.getPosition() + 1);
         encoder.setPosition(0);
+        print = true;
       }
       break;
     case MEASUREMENTS:
       // Manejar las mediciones
       static int time = millis();
-      if (encoder.moved() || millis() - time > 1000) { // Imprimir medidas si el encoder se mueve o ha pasado 1s
+      if (encoder.moved() || millis() - time > 1000 || printOneTime()) { // Imprimir medidas si el encoder se mueve o ha pasado 1s
         time = millis();
         print_measurments();
       }
       if (encoder.isButtonPressed() && encoder.getPosition() == 9) {
         state = MAIN_MENU;
         encoder.setPosition(0);
+        print = true;
       }
       break;
     case CONTROL_MENU:
       // Manejar el menu de control
-      if (encoder.moved()) print_control(encoder.getPosition());
+      if (encoder.moved() || printOneTime()) print_control(encoder.getPosition());
       if (encoder.isButtonPressed()) {
         state = (encoder.getPosition() == CONTROL_EXIT) ? MAIN_MENU : CONTROL; // Salir del menu de control o ir a control
         control_state = ControlState(encoder.getPosition());
         encoder.setPosition(0);
+        print = true;
       }
       break;
     case CONTROL:
       // Manejar el control
       switch (control_state) {
         case CONTROL_DO1:
-          if (encoder.moved()) control_digital(do1, "DO1");
+          if (encoder.moved() || printOneTime()) control_digital(do1, "DO1");
           if (encoder.isButtonPressed()) {
             if (encoder.getPosition() == 0) {
               do1.toggle();
@@ -298,11 +303,12 @@ void fsm() {
             else {
               state = CONTROL_MENU;
               encoder.setPosition(0);
+              print = true;
             }
           }
           break;
         case CONTROL_DO2:
-          if (encoder.moved()) control_digital(do2, "DO2");
+          if (encoder.moved() || printOneTime()) control_digital(do2, "DO2");
           if (encoder.isButtonPressed()) {
             if (encoder.getPosition() == 0) {
               do2.toggle();
@@ -311,11 +317,12 @@ void fsm() {
             else {
               state = CONTROL_MENU;
               encoder.setPosition(0);
+              print = true;
             }
           }
           break;
         case CONTROL_DO3:
-          if (encoder.moved()) control_digital(do3, "DO3");
+          if (encoder.moved() || printOneTime()) control_digital(do3, "DO3");
           if (encoder.isButtonPressed()) {
             if (encoder.getPosition() == 0) {
               do3.toggle();
@@ -324,6 +331,7 @@ void fsm() {
             else {
               state = CONTROL_MENU;
               encoder.setPosition(0);
+              print = true;
             }
           }
           break;
@@ -331,7 +339,7 @@ void fsm() {
           encoder.setMaxPosition(5000/100);
           encoder.setMinPosition(0);
           while (!encoder.isButtonPressed()) {
-            if (encoder.moved()) {
+            if (encoder.moved() || printOneTime()) {
               int val = encoder.getPosition() * 100;
               int digitalVal = (int)(val * DAC_MAX_DIGITAL_VALUE / 5000);
               dac.digitalWrite(digitalVal);
@@ -341,12 +349,13 @@ void fsm() {
           }
           state = CONTROL_MENU;
           encoder.setPosition(0);
+          print = true;
           break;
         case CONTROL_PWM1:
           encoder.setMaxPosition(10);
           encoder.setMinPosition(0);
           while (!encoder.isButtonPressed()) {
-            if (encoder.moved()) {
+            if (encoder.moved() || printOneTime()) {
               pwm1.setDutyCycle(encoder.getPosition() * 10); // Ajustar el ciclo de trabajo de 10 en 10
               control_pwm(pwm1, "PWM1");
             }
@@ -354,12 +363,13 @@ void fsm() {
           }
           state = CONTROL_MENU;
           encoder.setPosition(0);
+          print = true;
           break;
         case CONTROL_PWM2:
           encoder.setMaxPosition(10);
           encoder.setMinPosition(0);
           while (!encoder.isButtonPressed()) {
-            if (encoder.moved()) {
+            if (encoder.moved() || printOneTime()) {
               pwm2.setDutyCycle(encoder.getPosition() * 10); // Ajustar el ciclo de trabajo de 10 en 10
               control_pwm(pwm2, "PWM2");
             }
@@ -367,10 +377,12 @@ void fsm() {
           }
           state = CONTROL_MENU;
           encoder.setPosition(0);
+          print = true;
           break;
         case CONTROL_EXIT:
           state = CONTROL_MENU;
           encoder.setPosition(0);
+          print = true;
           break;
       }
       break;
@@ -378,6 +390,8 @@ void fsm() {
       // Manejar la configuración
       if (encoder.isButtonPressed()) {
         state = MAIN_MENU;
+        encoder.setPosition(0);
+        print = true;
       }
       break;
   }
@@ -457,4 +471,12 @@ void control_pwm(PWM p, String pinName){
   lcd.clear();
   print_line(0, "--Control de " + pinName + "--");
   print_line(1, "Duty: " + String(p.getDutyCycle()*100/255) + "%");
+}
+
+bool printOneTime() { // Función para imprimir solo una vez
+  if (print) {
+    print = false;
+    return true;
+  }
+  return false;
 }
