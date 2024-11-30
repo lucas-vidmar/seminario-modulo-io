@@ -116,6 +116,12 @@ public:
      */
     bool moved();
 
+    /**
+     * @brief Actualiza el estado del codificador (no hace nada en la versión real).
+     * 
+     */
+    void update();
+
 private:
 
     /**

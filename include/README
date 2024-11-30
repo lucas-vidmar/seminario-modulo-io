@@ -1,28 +1,28 @@
-# Header Files Documentation
+# Documentación de Archivos Header
 
 ## main.h
-This file contains the main declarations for the project, including function declarations for HTML handlers, menu printing, FSM logic, and GPIO control.
+Este archivo contiene las declaraciones principales del proyecto, incluidas las declaraciones de funciones para los manejadores de HTML, la impresión de menús, la lógica FSM y el control de GPIO.
 
 ## led.h
-This file contains the declaration of the `BuiltInLed` class, which provides methods to control the built-in LED on a microcontroller.
+Este archivo contiene la declaración de la clase `BuiltInLed`, que proporciona métodos para controlar el LED incorporado en un microcontrolador.
 
 ## lcdsim.h
-This file contains the declaration of the `SimulatedLCD` class, which simulates an LCD screen for testing purposes.
+Este archivo contiene la declaración de la clase `SimulatedLCD`, que simula una pantalla LCD para fines de prueba.
 
 ## i2c.h
-This file contains the declaration of the `I2C` class, which provides methods for initializing the I2C interface and performing read and write operations on the I2C bus.
+Este archivo contiene la declaración de la clase `I2C`, que proporciona métodos para inicializar la interfaz I2C y realizar operaciones de lectura y escritura en el bus I2C.
 
 ## gpio.h
-This file contains the declaration of the `GPIO` class and its derived classes `DigitalGPIO` and `AnalogGPIO`, which provide methods for configuring, reading, and writing to GPIO pins.
+Este archivo contiene la declaración de la clase `GPIO` y sus clases derivadas `DigitalGPIO` y `AnalogGPIO`, que proporcionan métodos para configurar, leer y escribir en los pines GPIO.
 
 ## encodersim.h
-This file contains the declaration of the `SimulatedEncoder` class, which simulates an encoder for testing purposes.
+Este archivo contiene la declaración de la clase `SimulatedEncoder`, que simula un codificador para fines de prueba.
 
 ## encoder.h
-This file contains the declaration of the `Encoder` class, which provides methods for interacting with a rotary encoder.
+Este archivo contiene la declaración de la clase `Encoder`, que proporciona métodos para interactuar con un codificador rotatorio.
 
 ## dac.h
-This file contains the declaration of the `DAC` class, which provides methods for initializing and controlling a Digital-to-Analog Converter (DAC) via I2C.
+Este archivo contiene la declaración de la clase `DAC`, que proporciona métodos para inicializar y controlar un Convertidor Digital a Analógico (DAC) a través de I2C.
 
 ## adc.h
-This file contains the declaration of the `ADC` class, which provides methods for interacting with an Analog-to-Digital Converter (ADC) via I2C.
+Este archivo contiene la declaración de la clase `ADC`, que proporciona métodos para interactuar con un Convertidor Analógico a Digital (ADC) a través de I2C.

@@ -87,20 +87,6 @@ public:
      */
     bool moved();
 
-    /**
-     * @brief Verificar si el codificador se ha movido a la izquierda.
-     * 
-     * @return true si el codificador se ha movido a la izquierda, false en caso contrario.
-     */
-    bool movedLeft();
-
-    /**
-     * @brief Verificar si el codificador se ha movido a la derecha.
-     * 
-     * @return true si el codificador se ha movido a la derecha, false en caso contrario.
-     */
-    bool movedRight();
-
 private:
     int position; ///< Posición actual del codificador.
     bool buttonPressed; ///< Estado del botón.

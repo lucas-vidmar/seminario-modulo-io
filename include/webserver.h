@@ -16,64 +16,64 @@
 class WebServerESP32 {
 public:
     /**
-     * @brief Constructor for the WebServerESP32 class.
+     * @brief Constructor de la clase WebServerESP32.
      * 
-     * This constructor initializes the WebServerESP32 object with the given 
-     * SSID and password for the access point (AP) and an optional port number.
+     * Este constructor inicializa el objeto WebServerESP32 con el SSID y la contraseña 
+     * dados para el punto de acceso (AP) y un número de puerto opcional.
      * 
-     * @param ssidAP The SSID of the access point.
-     * @param passwordAP The password of the access point.
-     * @param port The port number for the web server (default is 80).
+     * @param ssidAP El SSID del punto de acceso.
+     * @param passwordAP La contraseña del punto de acceso.
+     * @param port El número de puerto para el servidor web (por defecto es 80).
      */
     WebServerESP32(const char* ssidAP, const char* passwordAP, uint16_t port = 80);
 
     /**
-     * @brief Initializes and starts the web server.
+     * @brief Inicializa y arranca el servidor web.
      */
     void begin();
 
     /**
-     * @brief Registers a handler function to be called when a request with the specified URI and method is received.
+     * @brief Registra una función manejadora que será llamada cuando se reciba una solicitud con el URI y método especificados.
      * 
-     * @param uri The URI to match for the request.
-     * @param method The HTTP method to match for the request.
-     * @param onRequest The function to be called when the request is received.
+     * @param uri El URI a coincidir para la solicitud.
+     * @param method El método HTTP a coincidir para la solicitud.
+     * @param onRequest La función que será llamada cuando se reciba la solicitud.
      */
     void on(const char* uri, WebRequestMethodComposite method, ArRequestHandlerFunction onRequest);
 
     /**
-     * @brief Serves a static file from the filesystem.
+     * @brief Sirve un archivo estático desde el sistema de archivos.
      * 
-     * This function is used to serve a static file located at the specified path
-     * within the filesystem. It maps the given URI to the file and optionally 
-     * sets the cache control headers.
+     * Esta función se utiliza para servir un archivo estático ubicado en la ruta especificada
+     * dentro del sistema de archivos. Mapea el URI dado al archivo y opcionalmente 
+     * establece las cabeceras de control de caché.
      * 
-     * @param uri The URI to map to the static file.
-     * @param fs The filesystem object to use for accessing the file.
-     * @param path The path to the static file within the filesystem.
-     * @param cache_control Optional cache control headers to be sent with the response.
+     * @param uri El URI a mapear al archivo estático.
+     * @param fs El objeto del sistema de archivos a utilizar para acceder al archivo.
+     * @param path La ruta al archivo estático dentro del sistema de archivos.
+     * @param cache_control Cabeceras opcionales de control de caché a enviar con la respuesta.
      */
     void serveStatic(const char* uri, fs::FS& fs, const char* path, const char* cache_control = NULL);
 
     /**
-     * @brief Sets the handler function to be called when a requested resource is not found.
+     * @brief Establece la función manejadora que será llamada cuando no se encuentre un recurso solicitado.
      * 
-     * This function allows you to specify a custom handler that will be invoked
-     * whenever a client requests a resource that does not exist on the server.
+     * Esta función permite especificar un manejador personalizado que será invocado
+     * siempre que un cliente solicite un recurso que no existe en el servidor.
      * 
-     * @param handler The function to be called when a 404 Not Found error occurs.
+     * @param handler La función que será llamada cuando ocurra un error 404 Not Found.
      */
     void setNotFoundHandler(ArRequestHandlerFunction handler);
 
     /**
-     * @brief Sets the default file to be served by the web server.
+     * @brief Establece el archivo predeterminado que será servido por el servidor web.
      * 
-     * This function allows you to specify the default file that will be served
-     * when a client requests the root directory or a directory without specifying
-     * a file name.
+     * Esta función permite especificar el archivo predeterminado que será servido
+     * cuando un cliente solicite el directorio raíz o un directorio sin especificar
+     * un nombre de archivo.
      * 
-     * @param filename The name of the file to be set as the default. This should
-     *                 be a null-terminated string representing the file path.
+     * @param filename El nombre del archivo a establecer como predeterminado. Esto debe
+     *                 ser una cadena terminada en nulo que represente la ruta del archivo.
      */
     void setDefaultFile(const char* filename);
     
