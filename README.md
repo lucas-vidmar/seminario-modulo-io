@@ -2,8 +2,8 @@
 
 > **Autores:**
 > - [Lucas Vidmar](https://github.com/lucas-vidmar)
-> - [Joaquín Bergmann](https://github.com/boierito)
-> - [Lucas Boiero](https://github.com/JoacoBerg)
+> - [Joaquín Bergmann](https://github.com/JoacoBerg)
+> - [Lucas Boiero](https://github.com/boierito)
 >
 > **Institución:**
 > - [Universidad Argentina de la Empresa (UADE)](https://www.uade.edu.ar/)
