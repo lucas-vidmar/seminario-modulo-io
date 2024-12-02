@@ -1,6 +1,7 @@
 #include "main.h"
 
 bool print = true;
+bool wifiConfig = true;
 
 /* ------- Perifericos ------- */
 BuiltInLed led = BuiltInLed();
@@ -262,7 +263,17 @@ void fsm() {
         print_menu(menuOptions, 3, "Menu principal");
       }
       if (encoder.isButtonPressed()) {
-        state = MenuState(encoder.getPosition() + 1);
+        switch (encoder.getPosition()){
+          case 0:
+            state = MEASUREMENTS;
+            break;
+          case 1:
+            state = CONTROL_MENU;
+            break;
+          case 2:
+            state = CONFIG;
+            break;
+        }
         encoder.setPosition(0);
         print = true;
       }
@@ -356,7 +367,7 @@ void fsm() {
           encoder.setMinPosition(0);
           while (!encoder.isButtonPressed()) {
             if (encoder.moved() || printOneTime()) {
-              pwm1.setDutyCycle(encoder.getPosition() * 10); // Ajustar el ciclo de trabajo de 10 en 10
+              pwm1.setDutyCycle(100 - encoder.getPosition() * 10); // Ajustar el ciclo de trabajo de 10 en 10
               control_pwm(pwm1, "PWM1");
             }
             encoder.update();
@@ -370,7 +381,7 @@ void fsm() {
           encoder.setMinPosition(0);
           while (!encoder.isButtonPressed()) {
             if (encoder.moved() || printOneTime()) {
-              pwm2.setDutyCycle(encoder.getPosition() * 10); // Ajustar el ciclo de trabajo de 10 en 10
+              pwm2.setDutyCycle(100 - encoder.getPosition() * 10); // Ajustar el ciclo de trabajo de 10 en 10
               control_pwm(pwm2, "PWM2");
             }
             encoder.update();
@@ -387,8 +398,12 @@ void fsm() {
       }
       break;
     case CONFIG:
-      // Manejar la configuración
-      if (encoder.isButtonPressed()) {
+      // Manejar la configuración de WiFi
+      static String opsWiFi[] = {"IP: " + WiFi.softAPIP().toString(), "SSID: " + ssid, "Password: " + password, "Continuar"};
+      if (encoder.moved() || printOneTime()) {
+        print_menu(opsWiFi, 4, "Config AP");
+      }
+      if (encoder.isButtonPressed() && encoder.getPosition() == 3) {
         state = MAIN_MENU;
         encoder.setPosition(0);
         print = true;

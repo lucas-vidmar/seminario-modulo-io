@@ -38,8 +38,8 @@
 #define PPWM2 GPIO_NUM_5
 #define PWMFREQ 50
 
-#define USE_LCD
-#define USE_ENCODER
+#define USE_LCDs
+#define USE_ENCODERs
 
 /**
  * @brief Inicializa y configura los manejadores de HTML.
